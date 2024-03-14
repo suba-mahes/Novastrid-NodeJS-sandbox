@@ -16,21 +16,25 @@ const user_address = db.user_address;
 exports.findAll = async(req,res) => {
   try{
     const data = await user.findAll({include: user_address});
-    //const data = await user_address.findAll({include: user});
     if(data){
       EndResult(res,200,data);  
+    }
+    else{
+      EndResult(res,200,{'user': data, 'message': 'table is empty'});
+      return;
     }
   }
   catch(err){
     EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
     return;
   }
-}
+};
 
 
 exports.findID = (req,res) =>{
     
-  let id = parseInt(req.params.id);   
+  let id = parseInt(req.params.id); 
+
 
   user.findByPk(id)
   .then((data) => {
@@ -49,6 +53,7 @@ exports.findID = (req,res) =>{
       return;
   });
 };
+
 
 exports.create = (req, res) => {
     // Validate request
