@@ -19,7 +19,10 @@ const db ={};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.user = require("./user_model.js")(sequelize,Sequelize);
-//db.user_address = require("./user_address_model.js")(sequelize,Sequelize);
+db.user_address = require("./user_address_model.js")(sequelize,Sequelize);
+
+db.user.hasOne(db.user_address,{foreignKey: 'user_id'});
+db.user_address.belongsTo(db.user, { foreignKey: 'user_id' });
 
 
 module.exports = db;

@@ -1,16 +1,32 @@
 const db = require("../model");
 const user = db.user;
+const user_address = db.user_address;
 
-exports.findAll = (req,res) =>{
-    user.findAll()
-    .then((data) => {
-        EndResult(res,200,data);  
-    })
-    .catch((err)=> {
-        EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
-        return;
-    });
-};
+// exports.findAll = (req,res) =>{
+//     user.findAll()
+//     .then((data) => {
+//         EndResult(res,200,data);  
+//     })
+//     .catch((err)=> {
+//         EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
+//         return;
+//     });
+// };
+
+exports.findAll = async(req,res) => {
+  try{
+    const data = await user.findAll({include: user_address});
+    //const data = await user_address.findAll({include: user});
+    if(data){
+      EndResult(res,200,data);  
+    }
+  }
+  catch(err){
+    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
+    return;
+  }
+}
+
 
 exports.findID = (req,res) =>{
     
@@ -71,47 +87,64 @@ exports.update = (req,res) =>{
     }
   
   req.body.updatedAt = new Date().toJSON().slice(0, 10);
-  user.update(req.body, 
-    { where :{
-      user_id : id,
-    },
-  })
-  .then(num =>{
-    if(num == 1){
-      EndResult(res,200,{"message": "Updated sucessfully"});
-      return;
+  user.findByPk(id)
+  .then(data =>{
+    if(data){
+      user.update(req.body, 
+        { where :{
+          user_id : id,
+        },
+      })
+      .then(num =>{
+        if(num == 1){
+          EndResult(res,200,{"message": "Updated sucessfully"});
+          return;
+        }
+        else{
+          EndResult(res,400,{"message": "Updation failed"});
+          return;
+        }
+      })
+      .catch(err =>{
+        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
+      })
     }
     else{
-      EndResult(res,400,{"message": "Updation failed"});
+      EndResult(res,400,{"message": "user not found"});
       return;
     }
-  })
-  .catch(err =>{
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
   });
 };
 
 exports.deleteByID =(req,res) =>{
   let id = parseInt(req.params.id);
-
-  user.destroy({
-    where :{
-      user_id : id,
-    },
-  })
-  .then(num =>{
-    if(num == 1)
-    {
-      EndResult(res,200,{"message": "deleted sucessfully"});
-      return;
+  user.findByPk(id)
+  .then(data =>{
+    if(data){
+      user.destroy({
+        where :{
+          user_id : id,
+        },
+      })
+      .then(num =>{
+        if(num == 1)
+        {
+          EndResult(res,200,{"message": "deleted sucessfully"});
+          return;
+        }
+        else{
+          EndResult(res,400,{"message": "deletion failed or user not found"});
+          return;
+        }
+      })
+      .catch(err =>{
+        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
+      })
     }
     else{
-      EndResult(res,400,{"message": "deletion failed"});
-      return;
+      EndResult(res,400,{"message": "user not found"});
+      return
     }
-  })
-  .catch(err =>{
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
   });
 };
 
