@@ -106,31 +106,20 @@ exports.update = async(req,res) =>{
       const data = await user.findByPk(id)
       if(data)
       {
-        const num = await user.update(req.body, 
-            { where :{
-              user_id : id,
-            },
-          })
-        if(num == 1){
-          req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
-          const address_num = await user_address.update(req.body.address, 
-            { where :{
-              user_id : id,
-            },
-          })
-          if(address_num == 1){
-            EndResult(res,200,{"message": "Updated sucessfully"});
-            return;
-          }
-          else{
-            EndResult(res,400,{"message": "Updation failed at address table"});
-          }
+        await data.update(req.body);
+        const address = await user_address.findOne({ where: { user_id: id } });
+        req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
+        if(address){
+          await address.update(req.body.address);
+          data.dataValues.address = address;
+          EndResult(res,200,{"message": "Updated sucessfully","updated_user":data});
+          return;
         }
         else{
-          EndResult(res,400,{"message": "Updation failed at user table"});
+          EndResult(res,400,{"message": "user address not found"});
         }
       }
-      else{
+    else{
         EndResult(res,400,{"message": "user not found"});
       }
     }
@@ -141,7 +130,6 @@ exports.update = async(req,res) =>{
   }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
- 
   }
 };
 
@@ -166,29 +154,6 @@ exports.deleteByID = async(req,res) =>{
   catch(err){
         EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
   }
-};
-
-exports.deleteAll = async (req,res) =>{
-  try{
-    let id = parseInt(req.params.id);
-
-    const num = await user.destroy({
-      where :{},
-      truncate: false
-    })
-    if(num != 0)
-    {
-      EndResult(res,200,{"message": `${num} deleted sucessfully`});
-      return;
-    }
-    else{
-      EndResult(res,400,{"message": "deletion failed"});
-      return;
-    }
-  }
-  catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
-  };
 };
 
 
