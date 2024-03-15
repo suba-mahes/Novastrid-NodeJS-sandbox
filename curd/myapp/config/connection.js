@@ -3,7 +3,7 @@ const connection = {
     host: 'localhost',
     user: 'root',
     password: 'insu0418',
-    database: 'db_sequlize',
+    database: 'db',
     dialect: "mysql",
     pool: {
         max: 5,

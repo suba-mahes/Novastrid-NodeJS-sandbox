@@ -1,8 +1,5 @@
 const User = require('./user_model');
 
-// Define associations
-//User.hasOne(Address, { foreignKey: 'userId' });
-
 module.exports = (sequelize,Sequelize) =>{
     const UserAddress = sequelize.define("user_address",{
         user_address_id: {
