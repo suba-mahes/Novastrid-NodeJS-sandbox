@@ -16,7 +16,6 @@ exports.findID = (req,res) =>{
     
   let id = parseInt(req.params.id); 
 
-
   user.findByPk(id)
   .then((data) => {
       const user_result = JSON.parse(JSON.stringify(data))
@@ -76,7 +75,8 @@ exports.update = (req,res) =>{
   .then(data =>{
     if(data){
       user.update(req.body, 
-        { where :{
+        { 
+          where :{
           user_id : id,
         },
       })

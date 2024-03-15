@@ -2,6 +2,8 @@ const db = require("../model");
 const user = db.user;
 const user_address = db.user_address;
 
+const validation = require("../validation/user_validation");
+
 exports.findAll = async(req,res) => {
   try{
     const data = await user.findAll({include: user_address});
@@ -46,27 +48,48 @@ exports.findID = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if (!req.body.first_name || !req.body.last_name || !req.body.email_id) {
+    if(validation.validation_user(req.body)){
+    
+      // Create a user
+      const user_data = {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email_id: req.body.email_id,
+        createdAt: new Date().toJSON().slice(0, 10),
+        updatedAt: new Date().toJSON().slice(0, 10)
+      };
+
+      const user_adress_data = {
+        address1: req.body.address.address1,
+        address2: req.body.address.address2,
+        city: req.body.address.city,
+        state: req.body.address.state,
+        country: req.body.address.country,
+        createdAt: new Date().toJSON().slice(0, 10),
+        updatedAt: new Date().toJSON().slice(0, 10)
+      };
+      
+      // Save user in the database
+      const data = await user.create(user_data);
+      if(data){
+        const result = await user_address.create(user_adress_data);
+        if(result){
+          data.address = result;
+          EndResult(res,200,data);
+        }
+        else{
+          EndResult(res,404,{"message":"insertion failed at address table"});
+        }
+      }
+      else{
+        EndResult(res,404,{"message":"insertion failed at user table"});
+      }
+    }
+    else{
       EndResult(res,400,{"message": "missing the requirements"})
       return;
     }
-  
-    // Create a user
-    const user_data = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email_id: req.body.email_id,
-      createdAt: new Date().toJSON().slice(0, 10),
-      updatedAt: new Date().toJSON().slice(0, 10)
-    };
-
-
-    // Save user in the database
-    const data = await user.create(user_data);
-    if(data){
-        EndResult(res,200,data);
-      }
-   }
+  }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the user."})
   }
@@ -105,7 +128,7 @@ exports.update = async(req,res) =>{
     else{
         EndResult(res,400,{"message": "missing the requirements"})
         return;
-      }
+    }
   }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
