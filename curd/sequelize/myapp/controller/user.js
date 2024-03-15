@@ -7,7 +7,7 @@ exports.findAll = (req,res) =>{
         EndResult(res,200,data);  
     })
     .catch((err)=> {
-        EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
+        EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
         return;
     });
 };

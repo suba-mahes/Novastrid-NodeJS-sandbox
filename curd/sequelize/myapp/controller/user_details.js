@@ -78,7 +78,7 @@ exports.update = async(req,res) =>{
 
     //const user_data = JSON.parse(JSON.stringify(data))
 
-    if(req.body){
+    if(Object.keys(req.body).length){
       req.body.updatedAt = new Date().toJSON().slice(0, 10);
       const data = await user.findByPk(id)
       if(data)
