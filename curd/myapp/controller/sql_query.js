@@ -2,7 +2,7 @@ var sql_connection = require('../config/connection_db');
 
 module.exports.getAllUsers = async(req,res)=>{
     try{
-        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,u.dof,a.address1,a.address2,a.city, a.state, a.country, a.pin_number from users u join user_addresses a on u.user_id = a.user_id;", (err,user_results) => {
+        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id;", (err,user_results) => {
             if(err){
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
@@ -20,7 +20,7 @@ module.exports.getUserByID = async(req,res)=>{
     try{
 
         let id = parseInt(req.params.id);   
-        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,u.dof,a.address1,a.address2,a.city, a.state, a.country, a.pin_number from users u join user_addresses a on u.user_id = a.user_id where u.user_id = ?",[id], (err,user_results) => {
+        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id where u.user_id = ?",[id], (err,user_results) => {
             if(err){
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
