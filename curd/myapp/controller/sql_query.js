@@ -47,11 +47,11 @@ module.exports.create = async(req,res)=>{
         const user=req.body;
         
         //if(checkValidation(user)){
-            const {first_name, last_name, email_id, dof, address1, address2, city, state, country, pin_number} = user;
-            let user_createdAt = new Date().toJSON().slice(0, 10);
-            let user_updatedAt = new Date().toJSON().slice(0, 10);
+            const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
+            let createdAt = new Date().toJSON().slice(0, 10);
+            let updatedAt = new Date().toJSON().slice(0, 10);
 
-            await sql_connection.query("insert into users SET ?",{first_name, last_name, email_id,user_createdAt, user_updatedAt}, (err,user_results) => {
+            await sql_connection.query("insert into users SET ?",{first_name, last_name, email_id,createdAt, updatedAt}, (err,user_results) => {
                 if(err){
                     EndResult(res,err.status || 500,{"message": err.message})
                     return;
@@ -60,7 +60,7 @@ module.exports.create = async(req,res)=>{
                 if(user.affectedRows){
                         let user_id = user.insertId;
                         
-                        sql_connection.query("insert into user_addresses SET ?",{address1, address2, city, state, country,user_id, user_createdAt, user_updatedAt}, (err,user_address_results) => {
+                        sql_connection.query("insert into user_addresses SET ?",{address1, address2, city, state, country,user_id, createdAt, updatedAt}, (err,user_address_results) => {
                         if(err){
                             EndResult(res,err.status || 500,{"message": err.message});
                             return;
