@@ -2,7 +2,7 @@ var sql_connection = require('../config/connection_db');
 
 module.exports.getAllUsers = async(req,res)=>{
     try{
-        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,u.dof,a.address1,a.address2,a.city, a.state, a.country, a.pin_number from user u join user_address a on u.user_id = a.user_id;", (err,user_results) => {
+        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,u.dof,a.address1,a.address2,a.city, a.state, a.country, a.pin_number from users u join user_addresses a on u.user_id = a.user_id;", (err,user_results) => {
             if(err){
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
@@ -20,7 +20,7 @@ module.exports.getUserByID = async(req,res)=>{
     try{
 
         let id = parseInt(req.params.id);   
-        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,u.dof,a.address1,a.address2,a.city, a.state, a.country, a.pin_number from user u join user_address a on u.user_id = a.user_id where u.user_id = ?",[id], (err,user_results) => {
+        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,u.dof,a.address1,a.address2,a.city, a.state, a.country, a.pin_number from users u join user_addresses a on u.user_id = a.user_id where u.user_id = ?",[id], (err,user_results) => {
             if(err){
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
@@ -51,7 +51,7 @@ module.exports.create = async(req,res)=>{
             let user_createdAt = new Date().toJSON().slice(0, 10);
             let user_updatedAt = new Date().toJSON().slice(0, 10);
 
-            await sql_connection.query("insert into user SET ?",{first_name, last_name, email_id,user_createdAt, user_updatedAt}, (err,user_results) => {
+            await sql_connection.query("insert into users SET ?",{first_name, last_name, email_id,user_createdAt, user_updatedAt}, (err,user_results) => {
                 if(err){
                     EndResult(res,err.status || 500,{"message": err.message})
                     return;
@@ -60,7 +60,7 @@ module.exports.create = async(req,res)=>{
                 if(user.affectedRows){
                         let user_id = user.insertId;
                         
-                        sql_connection.query("insert into user_address SET ?",{address1, address2, city, state, country,user_id, user_createdAt, user_updatedAt}, (err,user_address_results) => {
+                        sql_connection.query("insert into user_addresses SET ?",{address1, address2, city, state, country,user_id, user_createdAt, user_updatedAt}, (err,user_address_results) => {
                         if(err){
                             EndResult(res,err.status || 500,{"message": err.message});
                             return;
@@ -91,11 +91,11 @@ module.exports.update = async(req,res)=>{
         const user = req.body;
         const id = parseInt(req.params.id);
         //if(checkValidation(user)){
-        const {first_name, last_name, email_id, dof, address1, address2, city, state, country, pin_number} = user;
+        const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
 
         let updated_at = new Date().toJSON().slice(0, 10);
 
-        await sql_connection.query(`update user u join user_address a on u.user_id = a.user_id set u.first_name = ?,  u.last_name = ?, u.email_id = ?, u.updatedAt = ?, a.address1 = ?, a.address2 = ?, a.city= ?, a.state = ?, a.country = ?, a.updatedAt = ? where u.user_id = ? And a.user_id = ? `,[first_name, last_name, email_id, updated_at, address1, address2, city, state, country, updated_at, id, id], (err,results) => {
+        await sql_connection.query(`update users u join user_addresses a on u.user_id = a.user_id set u.first_name = ?,  u.last_name = ?, u.email_id = ?, u.updatedAt = ?, a.address1 = ?, a.address2 = ?, a.city= ?, a.state = ?, a.country = ?, a.updatedAt = ? where u.user_id = ? And a.user_id = ? `,[first_name, last_name, email_id, updated_at, address1, address2, city, state, country, updated_at, id, id], (err,results) => {
             if(err){
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
@@ -120,7 +120,7 @@ module.exports.deleteUserByID = async(req,res)=>{
     try{
         let id = parseInt(req.params.id); 
         console.log(id);  
-        await sql_connection.query("delete from user u where u.user_id = ?",[id], (err,user_results) => {
+        await sql_connection.query("delete from users u where u.user_id = ?",[id], (err,user_results) => {
             if(err){
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
