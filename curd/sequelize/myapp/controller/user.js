@@ -1,35 +1,16 @@
 const db = require("../model");
 const user = db.user;
-const user_address = db.user_address;
 
-// exports.findAll = (req,res) =>{
-//     user.findAll()
-//     .then((data) => {
-//         EndResult(res,200,data);  
-//     })
-//     .catch((err)=> {
-//         EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
-//         return;
-//     });
-// };
-
-exports.findAll = async(req,res) => {
-  try{
-    const data = await user.findAll({include: user_address});
-    if(data){
-      EndResult(res,200,data);  
-    }
-    else{
-      EndResult(res,200,{'user': data, 'message': 'table is empty'});
-      return;
-    }
-  }
-  catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
-    return;
-  }
+exports.findAll = (req,res) =>{
+    user.findAll()
+    .then((data) => {
+        EndResult(res,200,data);  
+    })
+    .catch((err)=> {
+        EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
+        return;
+    });
 };
-
 
 exports.findID = (req,res) =>{
     
@@ -53,7 +34,6 @@ exports.findID = (req,res) =>{
       return;
   });
 };
-
 
 exports.create = (req, res) => {
     // Validate request
