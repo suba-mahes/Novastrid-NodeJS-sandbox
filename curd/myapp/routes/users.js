@@ -10,5 +10,4 @@ router.delete('/delete-user-by-id/:id',query.deleteUserByID);
 router.put('/update-user/:id',query.update);
 
 
-
 module.exports = router;

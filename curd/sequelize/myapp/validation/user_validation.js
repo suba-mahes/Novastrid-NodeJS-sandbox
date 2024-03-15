@@ -1,6 +1,6 @@
 
 exports.validation_user = (data) => {
-    if (!req.body.first_name || !req.body.last_name || !req.body.email_id  || !req.body.address.address1 || !req.body.address.address2 || !req.body.address.city || !req.body.address.state || !req.body.address.country) {
+    if (!data.first_name || !data.last_name || !data.email_id  || !data.address.address1 || !data.address.address2 || !data.address.city || !data.address.state || !data.address.country) {
         EndResult(res,400,{"message": "missing the requirements"})
         return false;
     }

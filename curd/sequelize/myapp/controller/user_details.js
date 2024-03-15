@@ -1,3 +1,4 @@
+const { VideoV1RoomRoomParticipantRoomParticipantSubscribeRuleRules } = require("twilio/lib/rest/video/v1/room/participant/subscribeRules");
 const db = require("../model");
 const user = db.user;
 const user_address = db.user_address;
@@ -72,9 +73,10 @@ exports.create = async(req, res) => {
       // Save user in the database
       const data = await user.create(user_data);
       if(data){
+        user_adress_data.user_id = data.user_id;
         const result = await user_address.create(user_adress_data);
         if(result){
-          data.address = result;
+          data.dataValues.address = result;
           EndResult(res,200,data);
         }
         else{
@@ -99,9 +101,7 @@ exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
 
-    //const user_data = JSON.parse(JSON.stringify(data))
-
-    if(Object.keys(req.body).length){
+    if(validation.validation_user(req.body)){
       req.body.updatedAt = new Date().toJSON().slice(0, 10);
       const data = await user.findByPk(id)
       if(data)
@@ -112,17 +112,26 @@ exports.update = async(req,res) =>{
             },
           })
         if(num == 1){
-          EndResult(res,200,{"message": "Updated sucessfully"});
-          return;
+          req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
+          const address_num = await user_address.update(req.body.address, 
+            { where :{
+              user_id : id,
+            },
+          })
+          if(address_num == 1){
+            EndResult(res,200,{"message": "Updated sucessfully"});
+            return;
+          }
+          else{
+            EndResult(res,400,{"message": "Updation failed at address table"});
+          }
         }
         else{
-          EndResult(res,400,{"message": "Updation failed"});
-          return;
+          EndResult(res,400,{"message": "Updation failed at user table"});
         }
       }
       else{
         EndResult(res,400,{"message": "user not found"});
-        return;
       }
     }
     else{
@@ -141,21 +150,13 @@ exports.deleteByID = async(req,res) =>{
     let id = parseInt(req.params.id);
     data = await user.findByPk(id)
     if(data){
-      const num = await user.destroy({
-        where :{
-          user_id : id,
-        },
-      })
-      
-      if(num == 1)
-      {
-        EndResult(res,200,{"message": "deleted sucessfully"});
-        return;
-      }
-      else{
-        EndResult(res,400,{"message": "deletion failed or user not found"});
-        return;
-      }
+      const address = await user_address.findOne({ where: { user_id: id } });
+      if(address){
+        await address.destroy();
+      }    
+      await data.destroy();
+      EndResult(res,200,{"message": "deleted sucessfully"});
+      return;
     }
     else{
       EndResult(res,400,{"message": "user not found"});
