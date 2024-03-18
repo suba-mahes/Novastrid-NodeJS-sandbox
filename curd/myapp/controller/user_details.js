@@ -48,7 +48,7 @@ exports.findID = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if(validation.validation_user(req.body)){
+    if(validation.validation_create_user(req.body)){
     
       // Create a user
       const user_data = {
