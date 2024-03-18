@@ -54,33 +54,37 @@ exports.create = async(req, res) => {
       const user_data = {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        email_id: req.body.email_id,
-        createdAt: new Date().toJSON().slice(0, 10),
-        updatedAt: new Date().toJSON().slice(0, 10)
+        email_id: req.body.email_id
       };
 
-      const user_adress_data = {
-        address1: req.body.address.address1,
-        address2: req.body.address.address2,
-        city: req.body.address.city,
-        state: req.body.address.state,
-        country: req.body.address.country,
-        createdAt: new Date().toJSON().slice(0, 10),
-        updatedAt: new Date().toJSON().slice(0, 10)
-      };
+      const user_adress_data = req.body.address;
+      
+      // const user_adress_data = {
+      //   address1: req.body.address.address1,
+      //   address1: req.body.address.address1,
+      //   address2: req.body.address.address2,
+      //   city: req.body.address.city,
+      //   state: req.body.address.state,
+      //   country: req.body.address.country
+      // };
       
       // Save user in the database
       const data = await user.create(user_data);
       if(data){
-        user_adress_data.user_id = data.user_id;
-        const result = await user_address.create(user_adress_data);
-        if(result){
-          data.dataValues.address = result;
-          EndResult(res,200,data);
+        data.dataValues.address = [];
+        for(const user_address_val of user_adress_data){
+          user_address_val.user_id = data.user_id;
+          const result = await user_address.create(user_address_val);
+          if(result){
+            data.dataValues.address.push(result);
+            console.log(data);
+          }
+          else{
+            EndResult(res,404,{"message":"insertion failed at address table"});
+            return;
+          }
         }
-        else{
-          EndResult(res,404,{"message":"insertion failed at address table"});
-        }
+        EndResult(res,200,data);
       }
       else{
         EndResult(res,404,{"message":"insertion failed at user table"});
@@ -101,22 +105,23 @@ exports.update = async(req,res) =>{
     let id = parseInt(req.params.id);
 
     if(validation.validation_user(req.body)){
-      req.body.updatedAt = new Date().toJSON().slice(0, 10);
       const data = await user.findByPk(id)
       if(data)
       {
         await data.update(req.body);
-        const address = await user_address.findOne({ where: { user_id: id } });
-        req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
-        if(address){
-          await address.update(req.body.address);
-          data.dataValues.address = address;
-          EndResult(res,200,{"message": "Updated sucessfully","updated_user":data});
-          return;
+        data.dataValues.address = [];
+        for(const address_val of req.body.address){
+          const address = await user_address.findOne({ where: { user_address_id: address_val.user_address_id } });
+          if(address){
+            await address.update(address_val);
+          }
+          else{
+            EndResult(res,400,{"message": "user address not found"});
+            return
+          }
         }
-        else{
-          EndResult(res,400,{"message": "user address not found"});
-        }
+        const result = await user.findByPk(id,{ include: user_address });
+        EndResult(res,200,result);
       }
     else{
         EndResult(res,400,{"message": "user not found"});
