@@ -160,6 +160,23 @@ exports.deleteByID = async(req,res) =>{
   }
 };
 
+exports.deleteByAddressID = async(req,res) =>{
+  try{
+    let id = parseInt(req.params.id);
+    let user_id = parseInt(req.params.user_id);
+      const address = await user_address.findOne({ where: { user_address_id: id } });
+      if(address){
+        await address.destroy();
+      }   
+      const result = await user.findByPk(user_id,{ include: user_address });
+      EndResult(res,200,{"message": "deleted sucessfully","updated user":result});
+      return;
+    }
+  catch(err){
+        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
+  }
+};
+
 
 function EndResult(res,res_status,result)
 {
