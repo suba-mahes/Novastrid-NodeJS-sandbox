@@ -113,73 +113,82 @@ exports.create = async(req, res) => {
   }
 };
 
-exports.updateActor = async(req,res) =>{
-  try{
-    let movie_id = parseInt(req.params.movie_id);
+// exports.updateActor = async(req,res) =>{
+//   try{
+//     let movie_id = parseInt(req.params.movie_id);
 
-    if(validation.validation_update(req.body)){
+//     if(validation.validation_update(req.body)){
       
-      const data = await actor_movie.findOne({
-        where:{
-          movie_id: movie_id
-        }
-      });
+//       const data = await actor_movie.findOne({
+//         where:{
+//           movie_id: movie_id
+//         }
+//       });
       
-      if(data)
-      {
-        await data.update(req.body);
-        EndResult(res,200,data);
-      }
-      else{
-          EndResult(res,400,{"message": "data not found"});
-        }
-    }
-    else{
-        EndResult(res,400,{"message": "missing the requirements"})
-        return;
-    }
-  }
-  catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
-  }
-};
+//       if(data)
+//       {
+//         await data.update(req.body);
+//         EndResult(res,200,data);
+//       }
+//       else{
+//           EndResult(res,400,{"message": "data not found"});
+//         }
+//     }
+//     else{
+//         EndResult(res,400,{"message": "missing the requirements"})
+//         return;
+//     }
+//   }
+//   catch(err){
+//     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
+//   }
+// };
 
 
-exports.updateMovie = async(req,res) =>{
-  try{
-    let actor_id = parseInt(req.params.actor_id);
+// exports.updateMovie = async(req,res) =>{
+//   try{
+//     let actor_id = parseInt(req.params.actor_id);
 
-    if(validation.validation_update(req.body)){
+//     if(validation.validation_update(req.body)){
       
-      const data = await actor_movie.findOne({
-        where:{
-          actor_id: actor_id
-        }
-      });
+//       const data = await actor_movie.findOne({
+//         where:{
+//           actor_id: actor_id
+//         }
+//       });
       
-      if(data)
-      {
-        await data.update(req.body);
-        EndResult(res,200,data);
-      }
-      else{
-          EndResult(res,400,{"message": "data not found"});
-        }
-    }
-    else{
-        EndResult(res,400,{"message": "missing the requirements"})
-        return;
-    }
-  }
-  catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
-  }
-};
+//       if(data)
+//       {
+//         await data.update(req.body);
+//         EndResult(res,200,data);
+//       }
+//       else{
+//           EndResult(res,400,{"message": "data not found"});
+//         }
+//     }
+//     else{
+//         EndResult(res,400,{"message": "missing the requirements"})
+//         return;
+//     }
+//   }
+//   catch(err){
+//     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
+//   }
+// };
 
 exports.deleteByID = async(req,res) =>{
   try{
-    let id = parseInt(req.params.id);
-    data = await actor_movie.findByPk(id)
+
+    let actor_id = parseInt(req.params.actor_id);
+    let movie_id = parseInt(req.params.movie_id);
+
+    const data = await actor_movie.findOne({
+      where:{
+        actor_id: actor_id,
+        movie_id: movie_id
+      }
+    });
+
     if(data){    
       await data.destroy();
       EndResult(res,200,{"message": "deleted sucessfully"});
