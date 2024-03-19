@@ -16,7 +16,7 @@ exports.findAll = async(req,res) => {
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
+    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
     return;
   }
 };
@@ -41,7 +41,7 @@ exports.findID = async(req,res) => {
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving tutorials."})
+    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
   }
 };
 
