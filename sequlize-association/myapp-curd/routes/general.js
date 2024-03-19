@@ -9,8 +9,8 @@ router.get('/get-only-allmovies',general.findAllMovie);
 router.get('/get-only-movie-by-id/:id',general.findIDMovie);
 
 router.post('/insert',general.create);
-router.put('/update/:id',general.update);
-//router.put('/update-movie/:id',general.updateMovie);
+router.put('/update-movie/:actor_id',general.updateMovie);
+router.put('/update-movie/:movie_id',general.updateActor);
 router.delete('/delete-general-by-id/:id',general.deleteByID);
 
 
