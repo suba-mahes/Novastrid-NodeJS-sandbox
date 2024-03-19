@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var actorRouter = require('./routes/actor');
 var movieRouter = require('./routes/movie');
+var actorMovieRouter = require('./routes/general');
 
 var app = express();
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 app.use('/actor', actorRouter);
 app.use('/movie', movieRouter);
+app.use('/actor_movie', actorMovieRouter);
 
 const db = require("./model");
 db.sequelize.sync();

@@ -4,7 +4,7 @@ const movie = db.movie;
 const actor_movie = db.actor_movie;
 
 
-const validation = require("../validation/validation");
+const validation = require("../validation/validation_movie");
 
 exports.findAll = async(req,res) => {
   try{
@@ -66,37 +66,35 @@ exports.findID = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if(validation.validation_create_user(req.body)){
+    if(validation.validation_create_movie(req.body)){
     
       // Create a actor
-      const user_data = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email_id: req.body.email_id
+      const movie_data = {
+        movie_name: req.body.movie_name
       };
 
-      const user_adress_data = req.body.address;
+      const actor_data = req.body.actors;
       
       // Save actor in the database
-      const data = await actor.create(user_data);
+      const data = await movie.create(movie_data);
       if(data){
-        data.dataValues.address = [];
-        for(const user_address_val of user_adress_data){
-          user_address_val.user_id = data.user_id;
-          const result = await movie.create(user_address_val);
+        data.dataValues.actors = [];
+        for(const actor_val of actor_data){
+          const result = await actor.create(actor_val);
           if(result){
-            data.dataValues.address.push(result);
+            await actor_movie.create({ actor_id:result.actor_id, movie_id: data.movie_id })
+            data.dataValues.actors.push(result);
             console.log(data);
           }
           else{
-            EndResult(res,404,{"message":"insertion failed at address table"});
+            EndResult(res,404,{"message":"insertion failed at actors table"});
             return;
           }
         }
         EndResult(res,200,data);
       }
       else{
-        EndResult(res,404,{"message":"insertion failed at actor table"});
+        EndResult(res,404,{"message":"insertion failed at movie table"});
       }
     }
     else{
@@ -113,28 +111,16 @@ exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
 
-    if(validation.validation_user(req.body)){
-      const data = await actor.findByPk(id)
+    if(validation.validation_movie(req.body)){
+      const data = await movie.findByPk(id)
       if(data)
       {
         await data.update(req.body);
-        data.dataValues.address = [];
-        for(const address_val of req.body.address){
-          const address = await movie.findOne({ where: { user_address_id: address_val.user_address_id } });
-          if(address){
-            await address.update(address_val);
-          }
-          else{
-            EndResult(res,400,{"message": "actor address not found"});
-            return
-          }
+        EndResult(res,200,data);
+      }
+      else{
+          EndResult(res,400,{"message": "movie not found"});
         }
-        const result = await actor.findByPk(id,{ include: movie });
-        EndResult(res,200,result);
-      }
-    else{
-        EndResult(res,400,{"message": "movie not found"});
-      }
     }
     else{
         EndResult(res,400,{"message": "missing the requirements"})
