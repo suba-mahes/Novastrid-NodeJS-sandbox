@@ -21,6 +21,11 @@ app.use('/actor_movie', actorMovieRouter);
 const db = require("./model");
 db.sequelize.sync();
 
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
 // error handler
 app.use(function(err, req, res, next) {
   

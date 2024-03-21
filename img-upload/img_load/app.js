@@ -4,42 +4,40 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var usersRouter = require('./routes/users');
-var usersDetailRouter = require('./routes/users_details');
+var fileUpload = require('express-fileupload')
+
+var imageRouter = require('./routes/image_upload');
 
 var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(fileUpload());
 
-app.use('/users', usersRouter);
-app.use('/users/detail', usersDetailRouter);
 
-const db = require("./model");
-db.sequelize.sync();
-
+app.use('/', imageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
 // error handler
 app.use(function(err, req, res, next) {
   
-    const err_json = {
-      "error_status" : err.status || 500,
-      "error_message" : err.message
+  const err_json = {
+    "error_status" : err.status || 500,
+    "error_message" : err.message
+  }
+  
+  res.format({
+    "application/json"(){
+      res.status(err.status || 500);
+      res.json(err_json);
     }
-    
-    res.format({
-      "application/json"(){
-        res.status(err.status || 500);
-        res.json(err_json);
-      }
-    })
-  });
+  })
+});
 
 module.exports = app;
