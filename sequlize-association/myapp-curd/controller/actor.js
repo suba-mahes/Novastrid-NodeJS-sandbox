@@ -1,7 +1,11 @@
 const db = require("../model");
+
 const actor = db.actor;
 const movie = db.movie;
 const actor_movie = db.actor_movie;
+
+const sequelize = db.Sequelize;
+const op = sequelize.Op;
 
 
 const validation = require("../validation/validation_actor");
@@ -40,6 +44,39 @@ exports.findID = async(req,res) => {
     const data = await actor.findOne({
       where: {
         actor_id : id,
+      },
+      include :[{
+        model: movie,
+        through:{
+          attributes: [],
+        }
+      }]
+    })
+    
+    if(data){
+      EndResult(res,200,data);  
+      return;
+    }
+    else{
+        EndResult(res,404,{"message":'actor is not found'});  
+        return;
+    }
+  }
+  catch(err){
+    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving actors."})
+  }
+};
+
+exports.findByName = async(req,res) => {
+  try{
+    console.log(req.params.name);
+    var name = (req.params.name); 
+    console.log(name);
+
+
+    const data = await actor.findOne({
+      where: {
+        first_name : { [op.like]: name},
       },
       include :[{
         model: movie,
