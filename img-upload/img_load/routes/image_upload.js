@@ -1,14 +1,8 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 const path = require('path');
 const fs = require('fs');
 
 var router = express.Router();
-
-const app = express(); 
-
-app.use("../file_images",express.static('file_images'));
-app.use(fileUpload());
 
 
 //const uploadDir = '/node_js/Novastrid-NodeJS-sandbox/img-upload/img_load/file_images';
@@ -26,6 +20,7 @@ router.get('/', function(req, res) {
 router.get('/view/image/:imageName', (req,res) => {
   try{
     const file_name = req.params.imageName;
+    console.log(file_name)
     res.sendFile(file_name,{root:'file_images'});
   }
   catch(err){
@@ -41,8 +36,6 @@ router.post('/image', (req,res)=>{
     }
 
     const image = req.files.image;
-
-    console.log(image)
 
     image.mv(path.join(uploadDir, image.name), (err) => {
       if (err) {

@@ -1,4 +1,4 @@
-const db_config = require("../config/connection");
+const db_config = require("./connection.js");
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(db_config.database, db_config.user, db_config.password, {
@@ -14,15 +14,28 @@ const sequelize = new Sequelize(db_config.database, db_config.user, db_config.pa
 });
 
 
+try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+}
+catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
+
+
 const db ={};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+
 db.user = require("./user_model.js")(sequelize,Sequelize);
 db.user_address = require("./user_address_model.js")(sequelize,Sequelize);
+db.user_table = require("./user_table_model.js")(sequelize,Sequelize);
+db.user_address_table = require("./user_address_table_model.js")(sequelize,Sequelize);
 
 db.user.hasOne(db.user_address,{foreignKey: 'user_id'});
 db.user_address.belongsTo(db.user, { foreignKey: 'user_id' });
-
+db.user_table.hasMany(db.user_address,{foreignKey: 'user_id'});
+db.user_address_table.belongsTo(db.user, { foreignKey: 'user_id' });
 
 module.exports = db;

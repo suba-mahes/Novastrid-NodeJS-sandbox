@@ -1,9 +1,7 @@
 const express = require('express');
-const multer = require('multer')
+const multer = require('multer');
 
 var router = express.Router();
-
-const app = express(); 
 
 
 

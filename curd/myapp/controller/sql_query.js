@@ -1,4 +1,4 @@
-var sql_connection = require('../config/connection_db');
+var sql_connection = require('../model/connection_db');
 
 module.exports.getAllUsers = async(req,res)=>{
     try{
