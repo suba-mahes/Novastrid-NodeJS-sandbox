@@ -1,15 +1,16 @@
-var sql_connection = require('../model/connection_db');
+var sql_connection = require('../model/connection_db.js');
 
 module.exports.getAllUsers = async(req,res)=>{
     try{
-        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id;", (err,user_results) => {
-            if(err){
-                EndResult(res,err.status || 500,{"message": err.message})
-                return;
-            }
-            const user = JSON.parse(JSON.stringify(user_results))
-            EndResult(res,200,user);  
-        })
+        try{
+            const [results,feilds] = await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id;");
+            
+            console.log(results)
+            EndResult(res,200,results);  
+        }
+        catch(err){
+            EndResult(res,err.status || 500,{"message": err.message})
+        }
     }
     catch(error){
         EndResult(res,error.status,{"message": error.message})
@@ -20,22 +21,21 @@ module.exports.getUserByID = async(req,res)=>{
     try{
 
         let id = parseInt(req.params.id);   
-        await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id where u.user_id = ?",[id], (err,user_results) => {
-            if(err){
-                EndResult(res,err.status || 500,{"message": err.message})
-                return;
-            }
-            const user = JSON.parse(JSON.stringify(user_results))
-            if(user.length)
-            {
-                EndResult(res,200,user[0]);  
+        try{
+            const [results,feilds] = await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id where u.user_id = ?",[id]);
+            if(results){
+                EndResult(res,200,results[0]);  
                 return;
             }
             else{
                 EndResult(res,404,{"message":'user is not found'});  
                 return
             }          
-        })
+        }
+        catch(err){
+            EndResult(res,err.status || 500,{"message": err.message})
+            return;
+        }
     }
     catch(error){
         EndResult(res,error.status,{"message": error.message})
@@ -50,15 +50,14 @@ module.exports.create = async(req,res)=>{
             const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
             let createdAt = new Date().toJSON().slice(0, 10);
             let updatedAt = new Date().toJSON().slice(0, 10);
-
             await sql_connection.query("insert into users SET ?",{first_name, last_name, email_id,createdAt, updatedAt}, (err,user_results) => {
                 if(err){
                     EndResult(res,err.status || 500,{"message": err.message})
                     return;
                 }
-                const user = JSON.parse(JSON.stringify(user_results))
-                if(user.affectedRows){
-                        let user_id = user.insertId;
+                console.log(user_results)
+                if(user_results.affectedRows){
+                        let user_id = user_results.insertId;
                         
                         sql_connection.query("insert into user_addresses SET ?",{address1, address2, city, state, country,user_id, createdAt, updatedAt}, (err,user_address_results) => {
                         if(err){
@@ -100,7 +99,6 @@ module.exports.update = async(req,res)=>{
                 EndResult(res,err.status || 500,{"message": err.message})
                 return;
             }
-            const user_results = JSON.parse(JSON.stringify(results))
             if(user_results.affectedRows){
                 EndResult(res,200,{'message':"updated successfully"});
                 return;

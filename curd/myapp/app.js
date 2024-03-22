@@ -7,6 +7,10 @@ var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var usersDetailRouter = require('./routes/users_details');
 var userDetailsTable = require('./routes/users_details_table');
+var actorRouter = require('./routes/actor');
+var movieRouter = require('./routes/movie');
+var actorMovieRouter = require('./routes/general');
+
 
 var app = express();
 
@@ -17,6 +21,10 @@ app.use(cookieParser());
 app.use('/users', usersRouter);
 app.use('/users/detail', usersDetailRouter);
 app.use('/users/detail/table', userDetailsTable);
+app.use('/actor', actorRouter);
+app.use('/movie', movieRouter);
+app.use('/actor_movie', actorMovieRouter);
+
 
 const db = require("./model");
 db.sequelize.sync();
