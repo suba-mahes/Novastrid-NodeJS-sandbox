@@ -51,40 +51,28 @@ exports.create = async(req, res) => {
     if(validation.validation_create_user(req.body)){
     
       // Create a user
-      const user_data = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email_id: req.body.email_id,
-        createdAt: new Date().toJSON().slice(0, 10),
-        updatedAt: new Date().toJSON().slice(0, 10)
-      };
+      const user_data = req.body
+      user_data.createdAt = new Date().toJSON().slice(0, 10);
+      user_data.updatedAt = new Date().toJSON().slice(0, 10);
 
-      const user_adress_data = {
-        address1: req.body.address.address1,
-        address2: req.body.address.address2,
-        city: req.body.address.city,
-        state: req.body.address.state,
-        country: req.body.address.country,
-        createdAt: new Date().toJSON().slice(0, 10),
-        updatedAt: new Date().toJSON().slice(0, 10)
-      };
+      const user_adress_data = req.body.address;
+      user_adress_data.createdAt= new Date().toJSON().slice(0, 10);
+      user_adress_data.updatedAt= new Date().toJSON().slice(0, 10);
       
       // Save user in the database
-      const data = await user.create(user_data);
+      const data = await user.create({
+        ...user_data,
+        user_address:{...user_adress_data,user_id:user_data.user_id}
+      },
+      {
+        include: [user_address]
+      });
       if(data){
-        user_adress_data.user_id = data.user_id;
-        const result = await user_address.create(user_adress_data);
-        if(result){
-          data.dataValues.address = result;
           EndResult(res,200,data);
         }
         else{
           EndResult(res,404,{"message":"insertion failed at address table"});
         }
-      }
-      else{
-        EndResult(res,404,{"message":"insertion failed at user table"});
-      }
     }
     else{
       EndResult(res,400,{"message": "missing the requirements"})
