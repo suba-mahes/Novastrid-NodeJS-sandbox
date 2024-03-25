@@ -69,28 +69,24 @@ exports.create = async(req, res) => {
     if(validation.validation_create_movie(req.body)){
     
       // Create a actor
-      const movie_data = {
-        movie_name: req.body.movie_name
-      };
+      const movie_data = req.body;
 
       const actor_data = req.body.actors;
       
       // Save actor in the database
-      const data = await movie.create(movie_data);
+      const data = await movie.create({
+        ...movie_data,
+        actor:[{...actor_data}],
+        actor_movie: actor_data.map(value => ({
+          actor_id: value.actor_id, 
+          movie_id: movie_data.movie_id
+        }))
+      },
+      {
+        include: actor
+      });
+
       if(data){
-        data.dataValues.actors = [];
-        for(const actor_val of actor_data){
-          const result = await actor.create(actor_val);
-          if(result){
-            await actor_movie.create({ actor_id:result.actor_id, movie_id: data.movie_id })
-            data.dataValues.actors.push(result);
-            console.log(data);
-          }
-          else{
-            EndResult(res,404,{"message":"insertion failed at actors table"});
-            return;
-          }
-        }
         EndResult(res,200,data);
       }
       else{
