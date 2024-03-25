@@ -34,7 +34,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"first_name\": \"aa\",\r\n        \"last_name\": \"zz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }",
+							"raw": "{\r\n        \"first_name\": \"asa\",\r\n        \"last_name\": \"zz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,7 +52,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"first_name\": \"aa\",\r\n        \"last_name\": \"zzz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"dof\": \"2001-01-04\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\",\r\n        \"pin_number\": 11\r\n    }",
+							"raw": "{\r\n        \"first_name\": \"insu\",\r\n        \"last_name\": \"zzz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"dof\": \"2001-01-04\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\",\r\n        \"pin_number\": 11\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -139,6 +139,283 @@
 						"url": "{{url}}{{user_detail}}/delete-user-by-id/3"
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "user details-ONE_TO_MANY",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user_detail_table}}/get-allusers"
+					},
+					"response": []
+				},
+				{
+					"name": "user-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user_detail_table}}/get-user-by-id/5"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"insu\",\r\n    \"last_name\": \"zzz\",\r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"address\": [\r\n        {\r\n            \"address_name\": \"office_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colon,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        },\r\n        {\r\n            \"address_name\": \"home_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colony,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user_detail_table}}/insert-user"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details-update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"suba\",\r\n    \"last_name\": \"zzz\",\r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"address\": [\r\n        {\r\n            \"user_address_id\":5,\r\n            \"address_name\": \"office_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb www,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        },\r\n        {\r\n            \"user_address_id\":6,\r\n            \"address_name\": \"home_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colony,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user_detail}}/update-user/2"
+					},
+					"response": []
+				},
+				{
+					"name": "delete - user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}{{user_detail}}/delete-user-by-id/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user details-MANY_TO_MANY",
+			"item": [
+				{
+					"name": "actor",
+					"item": [
+						{
+							"name": "actor",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{actor}}/get-allactors"
+							},
+							"response": []
+						},
+						{
+							"name": "actor-id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{actor}}/get-actor-by-id/2"
+							},
+							"response": []
+						},
+						{
+							"name": "actor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"first_name\": \"bbb\",\r\n        \"last_name\": \"yyy\",\r\n        \"movies\": [{\r\n            \"movie_name\": \"asd\"\r\n        }]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{actor}}/insert-actor"
+							},
+							"response": []
+						},
+						{
+							"name": "actor-update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"first_name\": \"suba\",\r\n    \"last_name\": \"yyy\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{actor}}/update-actor/2"
+							},
+							"response": []
+						},
+						{
+							"name": "delete - actor by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url}}{{actor}}/delete-actor-by-id/1"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "movie",
+					"item": [
+						{
+							"name": "movie",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{movie}}/get-allmovies"
+							},
+							"response": []
+						},
+						{
+							"name": "movie-id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{movie}}/get-movie-by-id/4"
+							},
+							"response": []
+						},
+						{
+							"name": "movie",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"movie_name\": \"insu\",\r\n        \"actors\": [\r\n            {\r\n                \"first_name\": \"bbb\",\r\n                \"last_name\": \"yyy\"\r\n            }\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{movie}}/insert-movie"
+							},
+							"response": []
+						},
+						{
+							"name": "movie-update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"movie_name\": \"insuba\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{movie}}/update-movie/4"
+							},
+							"response": []
+						},
+						{
+							"name": "delete - movie by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url}}{{movie}}/delete-movie-by-id/1"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "general",
+					"item": [
+						{
+							"name": "actor",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{actor_movie}}/get-only-allactors"
+							},
+							"response": []
+						},
+						{
+							"name": "movie",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{actor_movie}}/get-only-allmovies"
+							},
+							"response": []
+						},
+						{
+							"name": "actor-id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{actor_movie}}/get-only-actor-by-id/2"
+							},
+							"response": []
+						},
+						{
+							"name": "movie-id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}{{actor_movie}}/get-only-movie-by-id/1"
+							},
+							"response": []
+						},
+						{
+							"name": "general",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"actor_id\":2,\r\n    \"movie_id\":2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}{{actor_movie}}/insert"
+							},
+							"response": []
+						},
+						{
+							"name": "delete - by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url}}{{actor_movie}}/delete-by-id/2/2"
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
