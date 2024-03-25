@@ -1,6 +1,6 @@
 
 exports.validation_create_user = (data) => {
-    if (!data.first_name || !data.last_name || !data.email_id ||!data.address ) {
+    if (!data.first_name || !data.last_name || !data.email_id || !data.address ) {
         return false;
     }
     else{

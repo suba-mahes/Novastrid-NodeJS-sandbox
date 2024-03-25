@@ -49,46 +49,26 @@ exports.create = async(req, res) => {
   try{
     // Validate request
     if(validation.validation_create_user(req.body)){
-    
-      // Create a user
-      const user_data = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email_id: req.body.email_id
-      };
 
+      const user_data = req.body;
       const user_adress_data = req.body.address;
-      
-      // const user_adress_data = {
-      //   address1: req.body.address.address1,
-      //   address1: req.body.address.address1,
-      //   address2: req.body.address.address2,
-      //   city: req.body.address.city,
-      //   state: req.body.address.state,
-      //   country: req.body.address.country
-      // };
-      
-      // Save user in the database
-      const data = await user.create(user_data);
+
+      const data = await user.create({
+        ...user_data,
+        user_address_tables: user_adress_data.map(address => ({
+          ...address,
+          user_id: user_data.user_id
+        }))
+      },
+      {
+        include: user_address
+      });
       if(data){
-        data.dataValues.address = [];
-        for(const user_address_val of user_adress_data){
-          user_address_val.user_id = data.user_id;
-          const result = await user_address.create(user_address_val);
-          if(result){
-            data.dataValues.address.push(result);
-            console.log(data);
-          }
-          else{
-            EndResult(res,404,{"message":"insertion failed at address table"});
-            return;
-          }
+          EndResult(res,200,data);
         }
-        EndResult(res,200,data);
-      }
-      else{
-        EndResult(res,404,{"message":"insertion failed at user table"});
-      }
+        else{
+          EndResult(res,404,{"message":"insertion failed at address table"});
+        }
     }
     else{
       EndResult(res,400,{"message": "missing the requirements"})
