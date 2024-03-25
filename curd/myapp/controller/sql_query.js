@@ -1,4 +1,5 @@
 var sql_connection = require('../model/connection_db.js');
+var validation = require("../validation/joi/validation_user.js")
 
 module.exports.getAllUsers = async(req,res)=>{
     try{
@@ -44,7 +45,13 @@ module.exports.getUserByID = async(req,res)=>{
 module.exports.create = async(req,res)=>{
     try{
         const user=req.body;
-        //if(checkValidation(user)){
+        const { error, value } = validation.validation_user(req.body);
+        
+        if(error){
+            EndResult(res,500,{"message": error.details[0].message});
+            return;
+        }
+        else{
             const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
             let createdAt = new Date().toJSON().slice(0, 10);
             let updatedAt = new Date().toJSON().slice(0, 10);
@@ -77,10 +84,12 @@ module.exports.create = async(req,res)=>{
                 EndResult(res,500,{"message": err.message})
                 return;
             }
+        }
     }
     catch(error){
         EndResult(res,500,{"message": error.message})
     }
+    
 };
 
 module.exports.update = async(req,res)=>{
