@@ -9,7 +9,6 @@ const op = sequelize.Op;
 
 const validation = require("../validation/validation_actor_movie");
 const actor_movie_validation = require("../validation/joi/validation");
-const { ConversationListInstance } = require("twilio/lib/rest/conversations/v1/conversation");
 
 exports.findAllActor = async(req,res) => {
   try{
