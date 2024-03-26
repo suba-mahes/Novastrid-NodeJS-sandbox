@@ -9,21 +9,22 @@ const op = sequelize.Op;
 
 const validation = require("../validation/validation_actor_movie");
 const actor_movie_validation = require("../validation/joi/validation");
+var display = require("./result_display.js");
 
 exports.findAllActor = async(req,res) => {
   try{
     
     const data = await actor.findAll();
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
     }
     else{
-      EndResult(res,200,{'actor': data, 'message': 'table is empty'});
+      display.end_result(res,200,{'actor': data, 'message': 'table is empty'});
       return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving actors."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving actors."})
     return;
   }
 };
@@ -33,7 +34,7 @@ exports.findIDActor = async(req,res) => {
     let id = parseInt(req.params.id); 
     
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
     
@@ -44,16 +45,16 @@ exports.findIDActor = async(req,res) => {
     })
     
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
       return;
     }
     else{
-        EndResult(res,404,{"message":'actor is not found'});  
+        display.end_result(res,404,{"message":'actor is not found'});  
         return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving actors."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving actors."})
   }
 };
 
@@ -62,15 +63,15 @@ exports.findAllMovie = async(req,res) => {
     
     const data = await movie.findAll();
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
     }
     else{
-      EndResult(res,200,{'movie': data, 'message': 'table is empty'});
+      display.end_result(res,200,{'movie': data, 'message': 'table is empty'});
       return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movie."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movie."})
     return;
   }
 };
@@ -80,7 +81,7 @@ exports.findIDMovie = async(req,res) => {
     let id = parseInt(req.params.id); 
 
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
 
@@ -91,16 +92,16 @@ exports.findIDMovie = async(req,res) => {
     })
     
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
       return;
     }
     else{
-        EndResult(res,404,{"message":'movie is not found'});  
+        display.end_result(res,404,{"message":'movie is not found'});  
         return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movie."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movie."})
   }
 };
 
@@ -112,7 +113,7 @@ exports.create = async(req, res) => {
     const { error, value } = actor_movie_validation.validation_actor_movie(req.body);
       
     if(error){
-        EndResult(res,500,{"message": error.details.map(detail => detail.message)});
+        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
         return;
     }
 
@@ -127,7 +128,7 @@ exports.create = async(req, res) => {
         }
       })
       if(data){
-        EndResult(res,400,{"message": "the data is already inserted"})
+        display.end_result(res,400,{"message": "the data is already inserted"})
       }
       else{
         const check_actor = await actor.findByPk(req.body.actor_id);
@@ -136,25 +137,25 @@ exports.create = async(req, res) => {
         if((check_actor) && (check_movie)){
           const result = await actor_movie.create(req.body);
           if(result){
-            EndResult(res,404,{"message":"inserted successfully"});
+            display.end_result(res,404,{"message":"inserted successfully"});
           }
           else{
-            EndResult(res,404,{"message":"insertion failed"});
+            display.end_result(res,404,{"message":"insertion failed"});
             return;
           }
         }
         else{
-          EndResult(res,400,{"message": "Invalid values"})
+          display.end_result(res,400,{"message": "Invalid values"})
         }
       }
     }
     // else{
-    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   display.end_result(res,400,{"message": "missing the requirements"})
     //   return;
     // }
   }
   catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})
   }
 };
 
@@ -173,19 +174,19 @@ exports.create = async(req, res) => {
 //       if(data)
 //       {
 //         await data.update(req.body);
-//         EndResult(res,200,data);
+//         display.end_result(res,200,data);
 //       }
 //       else{
-//           EndResult(res,400,{"message": "data not found"});
+//           display.end_result(res,400,{"message": "data not found"});
 //         }
 //     }
 //     else{
-//         EndResult(res,400,{"message": "missing the requirements"})
+//         display.end_result(res,400,{"message": "missing the requirements"})
 //         return;
 //     }
 //   }
 //   catch(err){
-//     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
+//     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
 //   }
 // };
 
@@ -205,19 +206,19 @@ exports.create = async(req, res) => {
 //       if(data)
 //       {
 //         await data.update(req.body);
-//         EndResult(res,200,data);
+//         display.end_result(res,200,data);
 //       }
 //       else{
-//           EndResult(res,400,{"message": "data not found"});
+//           display.end_result(res,400,{"message": "data not found"});
 //         }
 //     }
 //     else{
-//         EndResult(res,400,{"message": "missing the requirements"})
+//         display.end_result(res,400,{"message": "missing the requirements"})
 //         return;
 //     }
 //   }
 //   catch(err){
-//     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
+//     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the actor."})
 //   }
 // };
 
@@ -228,12 +229,12 @@ exports.deleteByID = async(req,res) =>{
     let movie_id = parseInt(req.params.movie_id);
 
     if(!actor_id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
 
     if(!movie_id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
 
@@ -247,26 +248,26 @@ exports.deleteByID = async(req,res) =>{
 
     if(data){    
       await data.destroy();
-      EndResult(res,200,{"message": "deleted sucessfully"});
+      display.end_result(res,200,{"message": "deleted sucessfully"});
       return;
     }
     else{
-      EndResult(res,400,{"message": "actor not found"});
+      display.end_result(res,400,{"message": "actor not found"});
       return
     }
   }
   catch(err){
-        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the actor."})
+        display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the actor."})
   }
 };
 
 
-function EndResult(res,res_status,result)
-{
-    res.format({
-      "application/json"(){
-        res.status(res_status);
-        res.json(result);
-      }
-    })
-} 
+// function EndResult(res,res_status,result)
+// {
+//     res.format({
+//       "application/json"(){
+//         res.status(res_status);
+//         res.json(result);
+//       }
+//     })
+// } 

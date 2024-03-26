@@ -6,6 +6,7 @@ const actor_movie = db.actor_movie;
 
 const validation = require("../validation/validation_movie");
 const movie_validation = require("../validation/joi/validation");
+var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
   try{
@@ -21,15 +22,15 @@ exports.findAll = async(req,res) => {
 
 
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
     }
     else{
-      EndResult(res,200,{'movie': data, 'message': 'table is empty'});
+      display.end_result(res,200,{'movie': data, 'message': 'table is empty'});
       return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movies."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movies."})
     return;
   }
 };
@@ -39,10 +40,10 @@ exports.findID = async(req,res) => {
     let id = parseInt(req.params.id); 
 
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
-    
+
     const data = await movie.findOne({
       where: {
         movie_id : id,
@@ -56,16 +57,16 @@ exports.findID = async(req,res) => {
     })
     
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
       return;
     }
     else{
-        EndResult(res,404,{"message":'movie is not found'});  
+        display.end_result(res,404,{"message":'movie is not found'});  
         return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movies."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movies."})
   }
 };
 
@@ -76,7 +77,7 @@ exports.create = async(req, res) => {
     const { error, value } = movie_validation.validation_movie(req.body);
     
     if(error){
-        EndResult(res,500,{"message": error.details.map(detail => detail.message)});
+        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
         return;
     }
     else{
@@ -99,19 +100,19 @@ exports.create = async(req, res) => {
       });
 
       if(data){
-        EndResult(res,200,data);
+        display.end_result(res,200,data);
       }
       else{
-        EndResult(res,404,{"message":"insertion failed at movie table"});
+        display.end_result(res,404,{"message":"insertion failed at movie table"});
       }
     }
     // else{
-    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   display.end_result(res,400,{"message": "missing the requirements"})
     //   return;
     // }
   }
   catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})
   }
 };
 
@@ -124,19 +125,19 @@ exports.update = async(req,res) =>{
       if(data)
       {
         await data.update(req.body);
-        EndResult(res,200,data);
+        display.end_result(res,200,data);
       }
       else{
-          EndResult(res,400,{"message": "movie not found"});
+          display.end_result(res,400,{"message": "movie not found"});
         }
     }
     else{
-        EndResult(res,400,{"message": "missing the requirements"})
+        display.end_result(res,400,{"message": "missing the requirements"})
         return;
     }
   }
   catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the movie."})
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the movie."})
   }
 };
 
@@ -145,7 +146,7 @@ exports.deleteByID = async(req,res) =>{
     let id = parseInt(req.params.id);
     
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
 
@@ -156,26 +157,26 @@ exports.deleteByID = async(req,res) =>{
         await ref.destroy();
       }    
       await data.destroy();
-      EndResult(res,200,{"message": "deleted sucessfully"});
+      display.end_result(res,200,{"message": "deleted sucessfully"});
       return;
     }
     else{
-      EndResult(res,400,{"message": "movie not found"});
+      display.end_result(res,400,{"message": "movie not found"});
       return
     }
   }
   catch(err){
-        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the movie."})
+        display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the movie."})
   }
 };
 
 
-function EndResult(res,res_status,result)
-{
-    res.format({
-      "application/json"(){
-        res.status(res_status);
-        res.json(result);
-      }
-    })
-} 
+// function EndResult(res,res_status,result)
+// {
+//     res.format({
+//       "application/json"(){
+//         res.status(res_status);
+//         res.json(result);
+//       }
+//     })
+// } 

@@ -4,20 +4,21 @@ const user_address = db.user_address_table;
 
 const validation = require("../validation/user_table_validation");
 const user_validation = require("../validation/joi/validation_user");
+var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
   try{
     const data = await user.findAll({include: user_address});
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
     }
     else{
-      EndResult(res,200,{'user': data, 'message': 'table is empty'});
+      display.end_result(res,200,{'user': data, 'message': 'table is empty'});
       return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
     return;
   }
 };
@@ -27,10 +28,10 @@ exports.findID = async(req,res) => {
     let id = parseInt(req.params.id); 
 
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
-    
+
     const data = await user.findOne({
       where: {
         user_id : id,
@@ -38,16 +39,16 @@ exports.findID = async(req,res) => {
       include : user_address
     })
     if(data){
-      EndResult(res,200,data);  
+      display.end_result(res,200,data);  
       return;
     }
     else{
-        EndResult(res,404,{"message":'user is not found'});  
+        display.end_result(res,404,{"message":'user is not found'});  
         return;
     }
   }
   catch(err){
-    EndResult(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving users."})
   }
 };
 
@@ -58,7 +59,7 @@ exports.create = async(req, res) => {
     const { error, value } = user_validation.validation_user_detail_table(req.body);
       
     if(error){
-        EndResult(res,500,{"message": error.details.map(detail => detail.message)});
+        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
         return;
     }
     else{
@@ -77,19 +78,19 @@ exports.create = async(req, res) => {
         include: user_address
       });
       if(data){
-          EndResult(res,200,data);
+          display.end_result(res,200,data);
         }
         else{
-          EndResult(res,404,{"message":"insertion failed at address table"});
+          display.end_result(res,404,{"message":"insertion failed at address table"});
         }
     }
     // else{
-    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   display.end_result(res,400,{"message": "missing the requirements"})
     //   return;
     // }
   }
   catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the user."})
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the user."})
   }
 };
 
@@ -109,24 +110,24 @@ exports.update = async(req,res) =>{
             await address.update(address_val);
           }
           else{
-            EndResult(res,400,{"message": "user address not found"});
+            display.end_result(res,400,{"message": "user address not found"});
             return
           }
         }
         const result = await user.findByPk(id,{ include: user_address });
-        EndResult(res,200,result);
+        display.end_result(res,200,result);
       }
     else{
-        EndResult(res,400,{"message": "user not found"});
+        display.end_result(res,400,{"message": "user not found"});
       }
     }
     else{
-        EndResult(res,400,{"message": "missing the requirements"})
+        display.end_result(res,400,{"message": "missing the requirements"})
         return;
     }
   }
   catch(err){
-    EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
   }
 };
 
@@ -135,7 +136,7 @@ exports.deleteByID = async(req,res) =>{
     let id = parseInt(req.params.id);
 
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
 
@@ -146,16 +147,16 @@ exports.deleteByID = async(req,res) =>{
         await address.destroy();
       }    
       await data.destroy();
-      EndResult(res,200,{"message": "deleted sucessfully"});
+      display.end_result(res,200,{"message": "deleted sucessfully"});
       return;
     }
     else{
-      EndResult(res,400,{"message": "user not found"});
+      display.end_result(res,400,{"message": "user not found"});
       return
     }
   }
   catch(err){
-        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
+        display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
   }
 };
 
@@ -164,7 +165,7 @@ exports.deleteByAddressID = async(req,res) =>{
     let id = parseInt(req.params.id);
 
     if(!id){
-      EndResult(res,404,{"message":'parameter is empty'});  
+      display.end_result(res,404,{"message":'parameter is empty'});  
       return;
     }
 
@@ -174,21 +175,21 @@ exports.deleteByAddressID = async(req,res) =>{
         await address.destroy();
       }   
       const result = await user.findByPk(user_id,{ include: user_address });
-      EndResult(res,200,{"message": "deleted sucessfully","updated user":result});
+      display.end_result(res,200,{"message": "deleted sucessfully","updated user":result});
       return;
     }
   catch(err){
-        EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
+        display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the user."})
   }
 };
 
 
-function EndResult(res,res_status,result)
-{
-    res.format({
-      "application/json"(){
-        res.status(res_status);
-        res.json(result);
-      }
-    })
-} 
+// function EndResult(res,res_status,result)
+// {
+//     res.format({
+//       "application/json"(){
+//         res.status(res_status);
+//         res.json(result);
+//       }
+//     })
+// } 
