@@ -96,25 +96,33 @@ module.exports.update = async(req,res)=>{
     try{
         const user = req.body;
         const id = parseInt(req.params.id);
-        //if(checkValidation(user)){
-        const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
-
-        let updated_at = new Date().toJSON().slice(0, 10);
-        try{
-            const [user_results] = await sql_connection.query(`update users u join user_addresses a on u.user_id = a.user_id set u.first_name = ?,  u.last_name = ?, u.email_id = ?, u.updatedAt = ?, a.address1 = ?, a.address2 = ?, a.city= ?, a.state = ?, a.country = ?, a.updatedAt = ? where u.user_id = ? And a.user_id = ? `,[first_name, last_name, email_id, updated_at, address1, address2, city, state, country, updated_at, id, id]);
-            if(user_results.affectedRows){
-                EndResult(res,200,{'message':"updated successfully"});
-                return;
-            }
-            else{
-                EndResult(res,404,{'message':"updation failed"});
-                return;
-            }
-        }
-        catch(err){
-            EndResult(res,err.status || 500,{"message": err.message})
+        
+        const { error, value } = validation.validation_user(req.body);
+        
+        if(error){
+            EndResult(res,500,{"message": error.details[0].message});
             return;
-        }        
+        }
+        else{
+            const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
+
+            let updated_at = new Date().toJSON().slice(0, 10);
+            try{
+                const [user_results] = await sql_connection.query(`update users u join user_addresses a on u.user_id = a.user_id set u.first_name = ?,  u.last_name = ?, u.email_id = ?, u.updatedAt = ?, a.address1 = ?, a.address2 = ?, a.city= ?, a.state = ?, a.country = ?, a.updatedAt = ? where u.user_id = ? And a.user_id = ? `,[first_name, last_name, email_id, updated_at, address1, address2, city, state, country, updated_at, id, id]);
+                if(user_results.affectedRows){
+                    EndResult(res,200,{'message':"updated successfully"});
+                    return;
+                }
+                else{
+                    EndResult(res,404,{'message':"updation failed"});
+                    return;
+                }
+            }
+            catch(err){
+                EndResult(res,err.status || 500,{"message": err.message})
+                return;
+            }    
+        }    
     }
     catch(error){
         EndResult(res,error.status,{"message": error.message})
