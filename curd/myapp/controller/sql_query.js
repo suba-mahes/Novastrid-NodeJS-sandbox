@@ -22,8 +22,12 @@ module.exports.getUserByID = async(req,res)=>{
 
         let id = parseInt(req.params.id);   
         try{
+            if(!id){
+                EndResult(res,404,{"message":'parameter is empty'});  
+                return;
+            }
             const [results,feilds] = await sql_connection.query("select u.user_id,u.first_name,u.last_name,u.email_id,a.address1,a.address2,a.city, a.state, a.country from users u join user_addresses a on u.user_id = a.user_id where u.user_id = ?",[id]);
-            if(results){
+            if(results.length){
                 EndResult(res,200,results[0]);  
                 return;
             }
