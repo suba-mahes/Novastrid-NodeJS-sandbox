@@ -38,6 +38,11 @@ exports.findID = async(req,res) => {
   try{
     let id = parseInt(req.params.id); 
 
+    if(!id){
+      EndResult(res,404,{"message":'parameter is empty'});  
+      return;
+    }
+    
     const data = await movie.findOne({
       where: {
         movie_id : id,
@@ -138,6 +143,12 @@ exports.update = async(req,res) =>{
 exports.deleteByID = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
+    
+    if(!id){
+      EndResult(res,404,{"message":'parameter is empty'});  
+      return;
+    }
+
     data = await movie.findByPk(id)
     if(data){
       const ref = await actor_movie.findOne({ where: { movie_id: id } });

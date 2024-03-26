@@ -137,6 +137,12 @@ module.exports.deleteUserByID = async(req,res)=>{
         let id = parseInt(req.params.id); 
         console.log(id);  
         try{
+            
+            if(!id){
+                EndResult(res,404,{"message":'parameter is empty'});  
+                return;
+            }
+
             const [user_results] = await sql_connection.query("delete from users u where u.user_id = ?",[id]);
             if(user_results.affectedRows){
                 EndResult(res,200,{"message": "deleted successfully"});

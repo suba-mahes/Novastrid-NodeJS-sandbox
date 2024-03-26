@@ -26,6 +26,11 @@ exports.findID = async(req,res) => {
   try{
     let id = parseInt(req.params.id); 
 
+    if(!id){
+      EndResult(res,404,{"message":'parameter is empty'});  
+      return;
+    }
+    
     const data = await user.findOne({
       where: {
         user_id : id,
@@ -128,6 +133,12 @@ exports.update = async(req,res) =>{
 exports.deleteByID = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
+
+    if(!id){
+      EndResult(res,404,{"message":'parameter is empty'});  
+      return;
+    }
+
     data = await user.findByPk(id)
     if(data){
       const address = await user_address.findOne({ where: { user_id: id } });
@@ -151,6 +162,12 @@ exports.deleteByID = async(req,res) =>{
 exports.deleteByAddressID = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
+
+    if(!id){
+      EndResult(res,404,{"message":'parameter is empty'});  
+      return;
+    }
+
     let user_id = parseInt(req.params.user_id);
       const address = await user_address.findOne({ where: { user_address_id: id } });
       if(address){
