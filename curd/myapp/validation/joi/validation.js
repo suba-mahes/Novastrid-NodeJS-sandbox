@@ -1,6 +1,6 @@
-var actor_schema = require("./actor_create");
-var movie_schema = require("./movie_create");
-var actor_movie_schema = require("./actor_movie");
+var actor_schema = require("./actor_create_schema");
+var movie_schema = require("./movie_create_schema");
+var actor_movie_schema = require("./actor_movie_schema");
 
 
 module.exports.validation_actor = (data)=>{
