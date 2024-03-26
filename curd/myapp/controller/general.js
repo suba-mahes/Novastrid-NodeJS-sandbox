@@ -3,8 +3,13 @@ const actor = db.actor;
 const movie = db.movie;
 const actor_movie = db.actor_movie;
 
+const sequelize = db.Sequelize;
+const op = sequelize.Op;
+
+
 const validation = require("../validation/validation_actor_movie");
 const actor_movie_validation = require("../validation/joi/validation");
+const { ConversationListInstance } = require("twilio/lib/rest/conversations/v1/conversation");
 
 exports.findAllActor = async(req,res) => {
   try{
@@ -103,13 +108,35 @@ exports.create = async(req, res) => {
     }
 
     else{
-      data = await actor_movie.create(req.body);
+
+      const data = await actor_movie.findOne({
+        where: {
+          [op.and]:[
+            {movie_id : req.body.movie_id},
+            {actor_id : req.body.actor_id}
+          ]
+        }
+      })
       if(data){
-        EndResult(res,404,{"message":"inserted successfully"});
+        EndResult(res,400,{"message": "the data is already inserted"})
       }
       else{
-        EndResult(res,404,{"message":"insertion failed"});
-        return;
+        const check_actor = await actor.findByPk(req.body.actor_id);
+        const check_movie = await movie.findByPk(req.body.movie_id);
+
+        if((check_actor) && (check_movie)){
+          const result = await actor_movie.create(req.body);
+          if(result){
+            EndResult(res,404,{"message":"inserted successfully"});
+          }
+          else{
+            EndResult(res,404,{"message":"insertion failed"});
+            return;
+          }
+        }
+        else{
+          EndResult(res,400,{"message": "Invalid values"})
+        }
       }
     }
     // else{

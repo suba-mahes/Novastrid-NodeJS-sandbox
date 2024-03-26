@@ -177,7 +177,7 @@ exports.update = async(req,res) =>{
 exports.deleteByID = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
-    data = await actor.findByPk(id)
+    const data = await actor.findByPk(id)
     if(data){
       const ref = await db.actor_movie.findOne({ where: { actor_id: id } });
       if(ref){
