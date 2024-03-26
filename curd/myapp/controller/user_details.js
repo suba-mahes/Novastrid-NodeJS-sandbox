@@ -53,7 +53,7 @@ exports.create = async(req, res) => {
     const { error, value } = user_validation.validation_user_detail(req.body);
         
     if(error){
-        EndResult(res,500,{"message": error.details[0].message});
+        EndResult(res,500,{"message": error.details.map(detail => detail.message)});
         return;
     }
     else{

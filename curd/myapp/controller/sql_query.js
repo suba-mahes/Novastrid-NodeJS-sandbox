@@ -48,7 +48,7 @@ module.exports.create = async(req,res)=>{
         const { error, value } = validation.validation_user(req.body);
         
         if(error){
-            EndResult(res,500,{"message": error.details[0].message});
+            EndResult(res,500,{"message": error.details.map(detail => detail.message)});
             return;
         }
         else{
@@ -98,9 +98,8 @@ module.exports.update = async(req,res)=>{
         const id = parseInt(req.params.id);
         
         const { error, value } = validation.validation_user(req.body);
-        
         if(error){
-            EndResult(res,500,{"message": error.details[0].message});
+            EndResult(res,500,{"message": error.details.map(detail => detail.message)});
             return;
         }
         else{

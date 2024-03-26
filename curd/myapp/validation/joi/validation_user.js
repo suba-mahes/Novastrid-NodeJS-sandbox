@@ -4,13 +4,13 @@ var user_detail_table_schema = require("./user_detail_table_schema.js")
 
 
 module.exports.validation_user = (data)=>{
-    return user_schema.user_data_schema.validate(data);
+    return user_schema.user_data_schema.validate(data, { abortEarly: false });
 }
 
 module.exports.validation_user_detail = (data)=>{
-    return user_detail_schema.user_details_data_schema.validate(data);
+    return user_detail_schema.user_details_data_schema.validate(data, { abortEarly: false });
 }
 
 module.exports.validation_user_detail_table = (data)=>{
-    return user_detail_table_schema.user_details_data_schema.validate(data);
+    return user_detail_table_schema.user_details_data_schema.validate(data, { abortEarly: false });
 }
