@@ -4,6 +4,7 @@ const movie = db.movie;
 const actor_movie = db.actor_movie;
 
 const validation = require("../validation/validation_actor_movie");
+const actor_movie_validation = require("../validation/joi/validation");
 
 exports.findAllActor = async(req,res) => {
   try{
@@ -93,7 +94,15 @@ exports.findIDMovie = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if(validation.validation_create(req.body)){
+    //if(validation.validation_create(req.body)){
+    const { error, value } = actor_movie_validation.validation_actor_movie(req.body);
+      
+    if(error){
+        EndResult(res,500,{"message": error.details[0].message});
+        return;
+    }
+
+    else{
       data = await actor_movie.create(req.body);
       if(data){
         EndResult(res,404,{"message":"inserted successfully"});
@@ -103,10 +112,10 @@ exports.create = async(req, res) => {
         return;
       }
     }
-    else{
-      EndResult(res,400,{"message": "missing the requirements"})
-      return;
-    }
+    // else{
+    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   return;
+    // }
   }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})

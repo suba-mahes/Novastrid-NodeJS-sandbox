@@ -5,6 +5,7 @@ const actor_movie = db.actor_movie;
 
 
 const validation = require("../validation/validation_movie");
+const movie_validation = require("../validation/joi/validation");
 
 exports.findAll = async(req,res) => {
   try{
@@ -66,8 +67,14 @@ exports.findID = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if(validation.validation_create_movie(req.body)){
+    //if(validation.validation_create_movie(req.body)){
+    const { error, value } = movie_validation.validation_movie(req.body);
     
+    if(error){
+        EndResult(res,500,{"message": error.details[0].message});
+        return;
+    }
+    else{
       // Create a actor
       const movie_data = req.body;
 
@@ -93,10 +100,10 @@ exports.create = async(req, res) => {
         EndResult(res,404,{"message":"insertion failed at movie table"});
       }
     }
-    else{
-      EndResult(res,400,{"message": "missing the requirements"})
-      return;
-    }
+    // else{
+    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   return;
+    // }
   }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})

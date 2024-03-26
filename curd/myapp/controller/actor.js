@@ -9,6 +9,7 @@ const op = sequelize.Op;
 
 
 const validation = require("../validation/validation_actor");
+const actor_validation = require("../validation/joi/validation");
 
 exports.findAll = async(req,res) => {
   try{
@@ -103,8 +104,16 @@ exports.findByName = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if(validation.validation_create_actor(req.body)){
+    //if(validation.validation_create_actor(req.body)){
     
+    const { error, value } = actor_validation.validation_actor(req.body);
+      
+    if(error){
+        EndResult(res,500,{"message": error.details[0].message});
+        return;
+    }
+    else{
+      
       // Create a actor
       const actor_data = req.body;
 
@@ -130,10 +139,10 @@ exports.create = async(req, res) => {
         EndResult(res,404,{"message":"insertion failed at actor table"});
       }
     }
-    else{
-      EndResult(res,400,{"message": "missing the requirements"})
-      return;
-    }
+    // else{
+    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   return;
+    // }
   }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})
