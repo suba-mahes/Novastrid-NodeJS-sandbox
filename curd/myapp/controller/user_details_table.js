@@ -3,6 +3,7 @@ const user = db.user_table;
 const user_address = db.user_address_table;
 
 const validation = require("../validation/user_table_validation");
+const user_validation = require("../validation/joi/validation_user");
 
 exports.findAll = async(req,res) => {
   try{
@@ -48,7 +49,14 @@ exports.findID = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     // Validate request
-    if(validation.validation_create_user(req.body)){
+    //if(validation.validation_create_user(req.body)){
+    const { error, value } = user_validation.validation_user_detail_table(req.body);
+      
+    if(error){
+        EndResult(res,500,{"message": error.details[0].message});
+        return;
+    }
+    else{
 
       const user_data = req.body;
       const user_adress_data = req.body.address;
@@ -70,10 +78,10 @@ exports.create = async(req, res) => {
           EndResult(res,404,{"message":"insertion failed at address table"});
         }
     }
-    else{
-      EndResult(res,400,{"message": "missing the requirements"})
-      return;
-    }
+    // else{
+    //   EndResult(res,400,{"message": "missing the requirements"})
+    //   return;
+    // }
   }
   catch(err){
     EndResult(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the user."})
