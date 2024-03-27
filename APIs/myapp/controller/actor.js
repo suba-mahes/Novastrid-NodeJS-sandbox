@@ -142,6 +142,38 @@ exports.create = async(req, res) => {
   }
 };
 
+exports.create_with_movie_id = async(req, res) => {
+  try{
+    // Create a actor
+    const actor_data = req.body;
+
+    const movie_data = req.body.movies;
+    
+    // Save actor in the database
+    const data = await actor.create({
+      ...actor_data,
+      movie:[{...movie_data}],
+      actor_movie: movie_data.map(value => ({
+        actor_id: actor_data.actor_id, 
+        movie_id: value.movie_id
+      }))
+    },
+    {
+      include: movie
+    });
+
+    if(data){
+      display.end_result(res,200,data);
+    }
+    else{
+      display.end_result(res,404,{"message":"insertion failed at actor table"});
+    }
+  }
+  catch(err){
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})
+  }
+};
+
 exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);

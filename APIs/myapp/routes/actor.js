@@ -8,6 +8,7 @@ router.get('/get-allactors',actor.findAll);
 router.get('/get-actor-by-id/:id',actor.findID);
 router.get('/get-actor-by-first-name/:name',actor.findByName);
 router.post('/insert-actor', validation.validation_actor, actor.create);
+router.post('/insert-actor/with-movie-id', validation.validation_actor_movie_id, actor.create);
 router.put('/update-actor/:id',actor.update);
 router.delete('/delete-actor-by-id/:id',actor.deleteByID);
 

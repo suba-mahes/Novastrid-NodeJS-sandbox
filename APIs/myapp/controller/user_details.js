@@ -66,7 +66,8 @@ exports.create = async(req, res) => {
     // Save user in the database
     const data = await user.create({
       ...user_data,
-      user_address:{...user_adress_data,user_id:user_data.user_id}
+      //user_address:{...user_adress_data,user_id:user_data.user_id}
+      user_address: user_adress_data
     },
     {
       include: [user_address]

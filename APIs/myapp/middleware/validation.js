@@ -5,7 +5,18 @@ var display = require("../controller/result_display.js");
 
 
 module.exports.validation_actor = (req, res, next)=>{
-    const { error, value } = actor_schema.create_actor_schema.validate(data, { abortEarly: false });
+    const { error, value } = actor_schema.create_actor_schema.validate(req.body, { abortEarly: false });
+
+    if(error){
+        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
+        return;
+    }
+    
+    next();
+}
+
+module.exports.validation_actor_movie_id = (req, res, next)=>{
+    const { error, value } = actor_schema.create_actor_movie_id_schema.validate(req.body, { abortEarly: false });
 
     if(error){
         display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
@@ -16,7 +27,7 @@ module.exports.validation_actor = (req, res, next)=>{
 }
 
 module.exports.validation_movie = (req, res, next)=>{
-    const { error, value } = movie_schema.create_movie_schema.validate(data, { abortEarly: false });
+    const { error, value } = movie_schema.create_movie_schema.validate(req.body, { abortEarly: false });
 
     if(error){
         display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
@@ -27,7 +38,7 @@ module.exports.validation_movie = (req, res, next)=>{
 }
 
 module.exports.validation_actor_movie = (req, res, next)=>{
-    const { error, value } = actor_movie_schema.actor_movie_schema.validate(data, { abortEarly: false });
+    const { error, value } = actor_movie_schema.actor_movie_schema.validate(req.body, { abortEarly: false });
 
     if(error){
         display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
