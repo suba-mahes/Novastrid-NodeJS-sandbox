@@ -9,7 +9,6 @@ const op = sequelize.Op;
 
 
 const validation = require("../validation/validation_actor");
-const actor_validation = require("../validation/joi/validation");
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
@@ -113,46 +112,30 @@ exports.findByName = async(req,res) => {
 
 exports.create = async(req, res) => {
   try{
-    // Validate request
-    //if(validation.validation_create_actor(req.body)){
+    // Create a actor
+    const actor_data = req.body;
+
+    const movie_data = req.body.movies;
     
-    const { error, value } = actor_validation.validation_actor(req.body);
-      
-    if(error){
-        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
-        return;
+    // Save actor in the database
+    const data = await actor.create({
+      ...actor_data,
+      movie:[{...movie_data}],
+      actor_movie: movie_data.map(value => ({
+        actor_id: actor_data.actor_id, 
+        movie_id: value.movie_id
+      }))
+    },
+    {
+      include: movie
+    });
+
+    if(data){
+      display.end_result(res,200,data);
     }
     else{
-      
-      // Create a actor
-      const actor_data = req.body;
-
-      const movie_data = req.body.movies;
-      
-      // Save actor in the database
-      const data = await actor.create({
-        ...actor_data,
-        movie:[{...movie_data}],
-        actor_movie: movie_data.map(value => ({
-          actor_id: actor_data.actor_id, 
-          movie_id: value.movie_id
-        }))
-      },
-      {
-        include: movie
-      });
-
-      if(data){
-        display.end_result(res,200,data);
-      }
-      else{
-        display.end_result(res,404,{"message":"insertion failed at actor table"});
-      }
+      display.end_result(res,404,{"message":"insertion failed at actor table"});
     }
-    // else{
-    //   display.end_result(res,400,{"message": "missing the requirements"})
-    //   return;
-    // }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})

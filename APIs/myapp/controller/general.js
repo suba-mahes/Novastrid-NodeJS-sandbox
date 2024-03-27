@@ -8,7 +8,6 @@ const op = sequelize.Op;
 
 
 const validation = require("../validation/validation_actor_movie");
-const actor_movie_validation = require("../validation/joi/validation");
 var display = require("./result_display.js");
 
 exports.findAllActor = async(req,res) => {
@@ -108,51 +107,36 @@ exports.findIDMovie = async(req,res) => {
 
 exports.create = async(req, res) => {
   try{
-    // Validate request
-    //if(validation.validation_create(req.body)){
-    const { error, value } = actor_movie_validation.validation_actor_movie(req.body);
-      
-    if(error){
-        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
-        return;
-    }
 
-    else{
-
-      const data = await actor_movie.findOne({
-        where: {
-          [op.and]:[
-            {movie_id : req.body.movie_id},
-            {actor_id : req.body.actor_id}
-          ]
-        }
-      })
-      if(data){
-        display.end_result(res,400,{"message": "the data is already inserted"})
+    const data = await actor_movie.findOne({
+      where: {
+        [op.and]:[
+          {movie_id : req.body.movie_id},
+          {actor_id : req.body.actor_id}
+        ]
       }
-      else{
-        const check_actor = await actor.findByPk(req.body.actor_id);
-        const check_movie = await movie.findByPk(req.body.movie_id);
+    })
+    if(data){
+      display.end_result(res,400,{"message": "the data is already inserted"})
+    }
+    else{
+      const check_actor = await actor.findByPk(req.body.actor_id);
+      const check_movie = await movie.findByPk(req.body.movie_id);
 
-        if((check_actor) && (check_movie)){
-          const result = await actor_movie.create(req.body);
-          if(result){
-            display.end_result(res,404,{"message":"inserted successfully"});
-          }
-          else{
-            display.end_result(res,404,{"message":"insertion failed"});
-            return;
-          }
+      if((check_actor) && (check_movie)){
+        const result = await actor_movie.create(req.body);
+        if(result){
+          display.end_result(res,404,{"message":"inserted successfully"});
         }
         else{
-          display.end_result(res,400,{"message": "Invalid values"})
+          display.end_result(res,404,{"message":"insertion failed"});
+          return;
         }
       }
+      else{
+        display.end_result(res,400,{"message": "Invalid values"})
+      }
     }
-    // else{
-    //   display.end_result(res,400,{"message": "missing the requirements"})
-    //   return;
-    // }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})

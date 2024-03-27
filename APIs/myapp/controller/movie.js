@@ -5,7 +5,6 @@ const actor_movie = db.actor_movie;
 
 
 const validation = require("../validation/validation_movie");
-const movie_validation = require("../validation/joi/validation");
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
@@ -72,44 +71,30 @@ exports.findID = async(req,res) => {
 
 exports.create = async(req, res) => {
   try{
-    // Validate request
-    //if(validation.validation_create_movie(req.body)){
-    const { error, value } = movie_validation.validation_movie(req.body);
+    // Create a actor
+    const movie_data = req.body;
+
+    const actor_data = req.body.actors;
     
-    if(error){
-        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
-        return;
+    // Save actor in the database
+    const data = await movie.create({
+      ...movie_data,
+      actor:[{...actor_data}],
+      actor_movie: actor_data.map(value => ({
+        actor_id: value.actor_id, 
+        movie_id: movie_data.movie_id
+      }))
+    },
+    {
+      include: actor
+    });
+
+    if(data){
+      display.end_result(res,200,data);
     }
     else{
-      // Create a actor
-      const movie_data = req.body;
-
-      const actor_data = req.body.actors;
-      
-      // Save actor in the database
-      const data = await movie.create({
-        ...movie_data,
-        actor:[{...actor_data}],
-        actor_movie: actor_data.map(value => ({
-          actor_id: value.actor_id, 
-          movie_id: movie_data.movie_id
-        }))
-      },
-      {
-        include: actor
-      });
-
-      if(data){
-        display.end_result(res,200,data);
-      }
-      else{
-        display.end_result(res,404,{"message":"insertion failed at movie table"});
-      }
+      display.end_result(res,404,{"message":"insertion failed at movie table"});
     }
-    // else{
-    //   display.end_result(res,400,{"message": "missing the requirements"})
-    //   return;
-    // }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})

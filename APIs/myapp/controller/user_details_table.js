@@ -3,7 +3,6 @@ const user = db.user_table;
 const user_address = db.user_address_table;
 
 const validation = require("../validation/user_table_validation");
-const user_validation = require("../validation/joi/validation_user");
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
@@ -54,40 +53,25 @@ exports.findID = async(req,res) => {
 
 exports.create = async(req, res) => {
   try{
-    // Validate request
-    //if(validation.validation_create_user(req.body)){
-    const { error, value } = user_validation.validation_user_detail_table(req.body);
-      
-    if(error){
-        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
-        return;
-    }
-    else{
+    const user_data = req.body;
+    const user_adress_data = req.body.address;
 
-      const user_data = req.body;
-      const user_adress_data = req.body.address;
-
-      const data = await user.create({
-        ...user_data,
-        user_address_tables: user_adress_data.map(address => ({
-          ...address,
-          user_id: user_data.user_id
-        }))
-      },
-      {
-        include: user_address
-      });
-      if(data){
-          display.end_result(res,200,data);
-        }
-        else{
-          display.end_result(res,404,{"message":"insertion failed at address table"});
-        }
-    }
-    // else{
-    //   display.end_result(res,400,{"message": "missing the requirements"})
-    //   return;
-    // }
+    const data = await user.create({
+      ...user_data,
+      user_address_tables: user_adress_data.map(address => ({
+        ...address,
+        user_id: user_data.user_id
+      }))
+    },
+    {
+      include: user_address
+    });
+    if(data){
+        display.end_result(res,200,data);
+      }
+      else{
+        display.end_result(res,404,{"message":"insertion failed at address table"});
+      }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the user."})

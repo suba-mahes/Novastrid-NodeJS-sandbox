@@ -1,5 +1,4 @@
 var sql_connection = require('../model/connection_db.js');
-var validation = require("../validation/joi/validation_user.js")
 var display = require("./result_display.js");
 
 module.exports.getAllUsers = async(req,res)=>{
@@ -50,45 +49,37 @@ module.exports.getUserByID = async(req,res)=>{
 module.exports.create = async(req,res)=>{
     try{
         const user=req.body;
-        const { error, value } = validation.validation_user(req.body);
-        
-        if(error){
-            display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
-            return;
-        }
-        else{
-            const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
-            let createdAt = new Date().toJSON().slice(0, 10);
-            let updatedAt = new Date().toJSON().slice(0, 10);
-            try{
-                const [user_results] = await sql_connection.query("insert into users (first_name, last_name, email_id,createdAt, updatedAt) values(?,?,?,?,?) ",[first_name, last_name, email_id, createdAt, updatedAt]);
-                if(user_results.affectedRows){
-                    let user_id = user_results.insertId;
-                    try{    
-                        const [user_address_results] = await sql_connection.query("insert into user_addresses (address1, address2, city, state, country,user_id, createdAt, updatedAt) values(?,?,?,?,?,?,?,?) ",[address1, address2, city, state, country,user_id, createdAt, updatedAt]);
-                        if(user_address_results.affectedRows == 0){
-                            display.end_result(res,404,{'message':"insertion failed at address"});
-                            return;
-                        }
-                        else{
-                            display.end_result(res,200,{'message':"inserted successfully"});
-                            return;
-                        }
-                    }
-                    catch(err){
-                        display.end_result(res,err.status || 500,{"message": err.message});
+        const {first_name, last_name, email_id, address1, address2, city, state, country} = user;
+        let createdAt = new Date().toJSON().slice(0, 10);
+        let updatedAt = new Date().toJSON().slice(0, 10);
+        try{
+            const [user_results] = await sql_connection.query("insert into users (first_name, last_name, email_id,createdAt, updatedAt) values(?,?,?,?,?) ",[first_name, last_name, email_id, createdAt, updatedAt]);
+            if(user_results.affectedRows){
+                let user_id = user_results.insertId;
+                try{    
+                    const [user_address_results] = await sql_connection.query("insert into user_addresses (address1, address2, city, state, country,user_id, createdAt, updatedAt) values(?,?,?,?,?,?,?,?) ",[address1, address2, city, state, country,user_id, createdAt, updatedAt]);
+                    if(user_address_results.affectedRows == 0){
+                        display.end_result(res,404,{'message':"insertion failed at address"});
                         return;
-                    }                        
+                    }
+                    else{
+                        display.end_result(res,200,{'message':"inserted successfully"});
+                        return;
+                    }
                 }
-                else{
-                    display.end_result(res,404,{'message':"insertion failed"});
+                catch(err){
+                    display.end_result(res,err.status || 500,{"message": err.message});
                     return;
-                }
+                }                        
             }
-            catch(err){
-                display.end_result(res,500,{"message": err.message})
+            else{
+                display.end_result(res,404,{'message':"insertion failed"});
                 return;
             }
+        }
+        catch(err){
+            display.end_result(res,500,{"message": err.message})
+            return;
         }
     }
     catch(error){

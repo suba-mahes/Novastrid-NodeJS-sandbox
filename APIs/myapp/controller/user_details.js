@@ -3,7 +3,7 @@ const user = db.user;
 const user_address = db.user_address;
 
 const validation = require("../validation/user_validation");
-const user_validation = require("../validation/joi/validation_user");
+const user_validation = require("../middleware/validation_user.js");
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
@@ -54,45 +54,29 @@ exports.findID = async(req,res) => {
 
 exports.create = async(req, res) => {
   try{
-    // Validate request
+    // Create a user
+    const user_data = req.body
+    user_data.createdAt = new Date().toJSON().slice(0, 10);
+    user_data.updatedAt = new Date().toJSON().slice(0, 10);
 
-    const { error, value } = user_validation.validation_user_detail(req.body);
-        
-    if(error){
-        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
-        return;
-    }
-    else{
-    //if(validation.validation_create_user(req.body)){
+    const user_adress_data = req.body.address;
+    user_adress_data.createdAt= new Date().toJSON().slice(0, 10);
+    user_adress_data.updatedAt= new Date().toJSON().slice(0, 10);
     
-      // Create a user
-      const user_data = req.body
-      user_data.createdAt = new Date().toJSON().slice(0, 10);
-      user_data.updatedAt = new Date().toJSON().slice(0, 10);
-
-      const user_adress_data = req.body.address;
-      user_adress_data.createdAt= new Date().toJSON().slice(0, 10);
-      user_adress_data.updatedAt= new Date().toJSON().slice(0, 10);
-      
-      // Save user in the database
-      const data = await user.create({
-        ...user_data,
-        user_address:{...user_adress_data,user_id:user_data.user_id}
-      },
-      {
-        include: [user_address]
-      });
-      if(data){
-          display.end_result(res,200,data);
-        }
-        else{
-          display.end_result(res,404,{"message":"insertion failed at address table"});
-        }
-    }
-    // else{
-    //   display.end_result(res,400,{"message": "missing the requirements"})
-    //   return;
-    // }
+    // Save user in the database
+    const data = await user.create({
+      ...user_data,
+      user_address:{...user_adress_data,user_id:user_data.user_id}
+    },
+    {
+      include: [user_address]
+    });
+    if(data){
+        display.end_result(res,200,data);
+      }
+      else{
+        display.end_result(res,404,{"message":"insertion failed at address table"});
+      }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the user."})
