@@ -120,11 +120,7 @@ exports.create = async(req, res) => {
     // Save actor in the database
     const data = await actor.create({
       ...actor_data,
-      movie:[{...movie_data}],
-      actor_movie: movie_data.map(value => ({
-        actor_id: actor_data.actor_id, 
-        movie_id: value.movie_id
-      }))
+      movie:[{...movie_data}]
     },
     {
       include: movie
@@ -147,27 +143,32 @@ exports.create_with_movie_id = async(req, res) => {
     // Create a actor
     const actor_data = req.body;
 
-    const movie_data = req.body.movies;
-    
-    // Save actor in the database
-    const data = await actor.create({
-      ...actor_data,
-      movie:[{...movie_data}],
-      actor_movie: movie_data.map(value => ({
-        actor_id: actor_data.actor_id, 
-        movie_id: value.movie_id
-      }))
-    },
-    {
-      include: movie
+    const movie_data = req.body.movie_id;
+
+    const {count, rows} = await movie.findAndCountAll({
+      where : {
+        movie_id: {[op.in]: movie_data}
+      }
     });
 
-    if(data){
-      display.end_result(res,200,data);
-    }
+    if(count === movie_data.length){
+
+      const data = await actor.create({
+        ...actor_data
+      });
+      
+      await data.addMovies(rows);
+
+      if(data){
+        display.end_result(res,200,data);
+      }
+      else{
+        display.end_result(res,404,{"message":"insertion failed at actor table"});
+      }
+    }  
     else{
-      display.end_result(res,404,{"message":"insertion failed at actor table"});
-    }
+      display.end_result(res,404,{"message":"invalid movie id"});
+    }  
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the actor."})

@@ -79,11 +79,7 @@ exports.create = async(req, res) => {
     // Save actor in the database
     const data = await movie.create({
       ...movie_data,
-      actor:[{...actor_data}],
-      actor_movie: actor_data.map(value => ({
-        actor_id: value.actor_id, 
-        movie_id: movie_data.movie_id
-      }))
+      actor:[{...actor_data}]
     },
     {
       include: actor
