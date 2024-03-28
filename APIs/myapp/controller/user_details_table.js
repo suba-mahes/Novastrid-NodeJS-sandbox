@@ -54,27 +54,12 @@ exports.findID = async(req,res) => {
 exports.create = async(req, res) => {
   try{
     const user_data = req.body;
-    const user_adress_data = req.body.address;
 
-    // const data = await user.create({
-    //   ...user_data,
-    //   user_address_tables: user_adress_data.map(address => ({
-    //     ...address,
-    //     user_id: user_data.user_id
-    //   }))
-    // },
-    // {
-    //   include: user_address
-    // });
-
-    const data = await user.create({
-      ...user_data,
-      user_address_tables: [{...user_adress_data}]
-    },
+    const data = await user.create(user_data,
     {
-      include: user_address
+      include: [user_address]
     });
-
+    console.log(data)
     if(data){
         display.end_result(res,200,data);
       }

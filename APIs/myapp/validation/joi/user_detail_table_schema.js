@@ -21,7 +21,7 @@ exports.user_details_data_schema = Joi.object({
       "string.empty" : "email cannot be empty",
       "string.email" : "some thing is missing in email format",
     }),
-    address: Joi.array().items({
+    user_address_tables: Joi.array().items({
       address_name: Joi.string().required().messages({
         "any.required" : "address name is required",
         "string.empty" : "address name cannot be empty",
