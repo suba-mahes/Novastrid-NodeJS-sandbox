@@ -38,7 +38,8 @@ exports.findID = async(req,res) => {
         user_id : id,
       },
       include : user_address
-    })
+    });
+
     if(data){
       display.end_result(res,200,data);  
       return;
@@ -90,25 +91,32 @@ exports.update = async(req,res) =>{
     let id = parseInt(req.params.id);
 
     req.body.updatedAt = new Date().toJSON().slice(0, 10);
-    const data = await user.findByPk(id)
-    if(data)
-    {
-      await data.update(req.body);
-      const address = await user_address.findOne({ where: { user_id: id } });
-      req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
-      if(address){
-        await address.update(req.body.address);
-        data.dataValues.address = address;
-        display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
-        return;
-      }
-      else{
-        display.end_result(res,400,{"message": "user address not found"});
-      }
-    }
-    else{
-      display.end_result(res,400,{"message": "user not found"});
-    }
+    // const data = await user.findOne(id);
+    // if(data)
+    // {
+    //   await data.update(req.body);
+    //   console.log(!req.body.address);
+      
+    //   if(!req.body.address){
+    //     display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
+    //     return;
+    //   }
+      
+    //   const address = await user_address.findOne({ where: { user_id: id } });
+    //   req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
+    //   if(address){
+    //     await address.update(req.body.address);
+    //     data.dataValues.address = address;
+    //     display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
+    //     return;
+    //   }
+    //   else{
+    //     display.end_result(res,400,{"message": "user address not found"});
+    //   }
+    // }
+    // else{
+    //   display.end_result(res,400,{"message": "user not found"});
+    // }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})

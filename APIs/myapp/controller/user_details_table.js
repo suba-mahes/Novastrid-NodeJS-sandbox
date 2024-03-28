@@ -75,7 +75,8 @@ exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
 
-    const data = await user.findByPk(id)
+    const data = await user.findByPk(id);
+    console.log(data);
     if(data)
     {
       await data.update(req.body);

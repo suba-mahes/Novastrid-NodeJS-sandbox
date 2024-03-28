@@ -8,7 +8,7 @@ module.exports.validation_user_detail = (req, res, next)=>{
         next();
         return;
     }
-    display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
+    display.end_result(res,500,{"message": "requirement missing"});
 }
 
 module.exports.validation_user_detail_table = (req, res, next)=>{
@@ -17,7 +17,7 @@ module.exports.validation_user_detail_table = (req, res, next)=>{
         return;
     }
     else{
-        display.end_result(res,500,{"message": error.details.map(detail => detail.message)});
+        display.end_result(res,500,{"message": "requirement missing"});
         return;
     }
 }
