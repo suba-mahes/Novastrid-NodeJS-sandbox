@@ -2,7 +2,6 @@ const db = require("../model");
 const user = db.user_table;
 const user_address = db.user_address_table;
 
-const validation = require("../validation/validation_user_table.js");
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
@@ -76,32 +75,26 @@ exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
 
-    if(validation.validation_user(req.body)){
-      const data = await user.findByPk(id)
-      if(data)
-      {
-        await data.update(req.body);
-        data.dataValues.address = [];
-        for(const address_val of req.body.address){
-          const address = await user_address.findOne({ where: { user_address_id: address_val.user_address_id } });
-          if(address){
-            await address.update(address_val);
-          }
-          else{
-            display.end_result(res,400,{"message": "user address not found"});
-            return
-          }
+    const data = await user.findByPk(id)
+    if(data)
+    {
+      await data.update(req.body);
+      data.dataValues.address = [];
+      for(const address_val of req.body.address){
+        const address = await user_address.findOne({ where: { user_address_id: address_val.user_address_id } });
+        if(address){
+          await address.update(address_val);
         }
-        const result = await user.findByPk(id,{ include: user_address });
-        display.end_result(res,200,result);
+        else{
+          display.end_result(res,400,{"message": "user address not found"});
+          return
+        }
       }
-    else{
-        display.end_result(res,400,{"message": "user not found"});
-      }
+      const result = await user.findByPk(id,{ include: user_address });
+      display.end_result(res,200,result);
     }
     else{
-        display.end_result(res,400,{"message": "missing the requirements"})
-        return;
+      display.end_result(res,400,{"message": "user not found"});
     }
   }
   catch(err){
