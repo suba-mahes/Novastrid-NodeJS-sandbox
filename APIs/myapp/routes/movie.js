@@ -1,6 +1,6 @@
 var express = require('express');
 const movie = require('../controller/movie');
-var validation = require('../middleware/validation')
+var validation = require('../middleware/validation_create')
 
 var router = express.Router();
 

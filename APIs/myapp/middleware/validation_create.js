@@ -1,6 +1,6 @@
-var actor_schema = require("../validation/joi/actor_create_schema");
-var movie_schema = require("../validation/joi/movie_create_schema");
-var actor_movie_schema = require("../validation/joi/actor_movie_schema");
+var actor_schema = require("../validation/joi/actor_create_schema.js");
+var movie_schema = require("../validation/joi/movie_create_schema.js");
+var actor_movie_schema = require("../validation/joi/actor_movie_schema.js");
 var display = require("../controller/result_display.js");
 
 

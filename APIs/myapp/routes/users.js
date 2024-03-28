@@ -1,6 +1,6 @@
 var express = require('express');
 var query = require('../controller/sql_query');
-var validation = require('../middleware/validation_user')
+var validation = require('../middleware/validation_user_create')
 
 var router = express.Router();
 

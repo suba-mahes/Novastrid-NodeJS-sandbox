@@ -1,6 +1,6 @@
 var express = require('express');
 const users_detail = require('../controller/user_details.js');
-var validation = require('../middleware/validation_user')
+var validation = require('../middleware/validation_user_create.js')
 
 var router = express.Router();
 
