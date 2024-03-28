@@ -3,6 +3,8 @@ const actor = db.actor;
 const movie = db.movie;
 const actor_movie = db.actor_movie;
 
+const sequelize = db.Sequelize;
+const op = sequelize.Op;
 
 const validation = require("../validation/validation_movie");
 var display = require("./result_display.js");
@@ -91,6 +93,43 @@ exports.create = async(req, res) => {
     else{
       display.end_result(res,404,{"message":"insertion failed at movie table"});
     }
+  }
+  catch(err){
+    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})
+  }
+};
+
+exports.create_with_actor_id = async(req, res) => {
+  try{
+    // Create a actor
+    const movie_data = req.body;
+
+    const actor_data = req.body.actor_id;
+
+    const {count, rows} = await actor.findAndCountAll({
+      where : {
+        actor_id: {[op.in]: actor_data}
+      }
+    });
+
+    if(count === actor_data.length){
+
+      const data = await movie.create({
+        ...movie_data
+      });
+      
+      await data.addActors(rows);
+
+      if(data){
+        display.end_result(res,200,data);
+      }
+      else{
+        display.end_result(res,404,{"message":"insertion failed at movie table"});
+      }
+    }  
+    else{
+      display.end_result(res,404,{"message":"invalid actor id"});
+    }  
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})

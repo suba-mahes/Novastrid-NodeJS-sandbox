@@ -211,7 +211,7 @@ exports.deleteByID = async(req,res) =>{
 
     const data = await actor.findByPk(id)
     if(data){
-      const ref = await db.actor_movie.findOne({ where: { actor_id: id } });
+      const ref = await actor_movie.findOne({ where: { actor_id: id } });
       if(ref){
         await ref.destroy();
       }    

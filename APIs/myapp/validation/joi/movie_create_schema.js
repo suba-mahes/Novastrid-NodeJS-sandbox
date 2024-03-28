@@ -23,3 +23,15 @@ exports.create_movie_schema = Joi.object({
       }),
     })
   });
+
+  exports.create_movie_with_actor_id_schema = Joi.object({
+    movie_name: Joi.string().required().messages({
+      "any.required" : "movie name is required",
+      "string.empty" : "movie name cannot be empty"
+    }),
+    actor_id: Joi.array().items(Joi.number().required().messages({
+        "any.required" : "actor id is required",
+        "number.empty" : "actor_id cannot be empty"
+      })
+    )
+  });
