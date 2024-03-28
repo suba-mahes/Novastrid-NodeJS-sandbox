@@ -89,34 +89,45 @@ exports.create = async(req, res) => {
 exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
+    
+    const user_data = req.body;
 
-    req.body.updatedAt = new Date().toJSON().slice(0, 10);
-    // const data = await user.findOne(id);
-    // if(data)
-    // {
-    //   await data.update(req.body);
-    //   console.log(!req.body.address);
-      
-    //   if(!req.body.address){
-    //     display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
-    //     return;
-    //   }
-      
-    //   const address = await user_address.findOne({ where: { user_id: id } });
-    //   req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
-    //   if(address){
-    //     await address.update(req.body.address);
-    //     data.dataValues.address = address;
-    //     display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
-    //     return;
-    //   }
-    //   else{
-    //     display.end_result(res,400,{"message": "user address not found"});
-    //   }
-    // }
-    // else{
-    //   display.end_result(res,400,{"message": "user not found"});
-    // }
+    const data = await user.findByPk(id);
+    
+    if(data){
+
+      user_data.updatedAt = new Date().toJSON().slice(0, 10);
+      await data.update(user_data);
+
+      if(!req.body.address){
+        
+        const result = await user.findByPk(
+          id,{
+          include : user_address
+        });
+        
+        display.end_result(res,200,{"message": "Updated sucessfully","updated_user":result});
+        return;
+      }
+
+      const user_address_data = req.body.address;
+      user_address_data.updatedAt = new Date().toJSON().slice(0, 10);
+
+      const address = await user_address.findOne({ where: { user_id: id } });
+
+      if(address){
+        await address.update(user_address_data);
+        data.dataValues.address = address;
+        display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
+        return;
+      }
+      else{
+        display.end_result(res,400,{"message": "user address not found"});
+      }
+    }
+  else{
+      display.end_result(res,400,{"message": "user not found"});
+    }
   }
   catch(err){
     display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the user."})
