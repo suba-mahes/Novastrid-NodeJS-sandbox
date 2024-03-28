@@ -2,7 +2,7 @@ const db = require("../model");
 const user = db.user_table;
 const user_address = db.user_address_table;
 
-const validation = require("../validation/user_table_validation");
+const validation = require("../validation/validation_user_table.js");
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {

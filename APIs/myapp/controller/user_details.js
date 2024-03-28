@@ -2,8 +2,9 @@ const db = require("../model");
 const user = db.user;
 const user_address = db.user_address;
 
-const validation = require("../validation/user_validation");
-const user_validation = require("../middleware/validation_user.js");
+const validation = require("../validation/validation_user.js");
+const user_validation = require("../middleware/validation_user_create.js");
+
 var display = require("./result_display.js");
 
 exports.findAll = async(req,res) => {
@@ -88,31 +89,25 @@ exports.update = async(req,res) =>{
   try{
     let id = parseInt(req.params.id);
 
-    if(validation.validation_user(req.body)){
-      req.body.updatedAt = new Date().toJSON().slice(0, 10);
-      const data = await user.findByPk(id)
-      if(data)
-      {
-        await data.update(req.body);
-        const address = await user_address.findOne({ where: { user_id: id } });
-        req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
-        if(address){
-          await address.update(req.body.address);
-          data.dataValues.address = address;
-          display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
-          return;
-        }
-        else{
-          display.end_result(res,400,{"message": "user address not found"});
-        }
+    req.body.updatedAt = new Date().toJSON().slice(0, 10);
+    const data = await user.findByPk(id)
+    if(data)
+    {
+      await data.update(req.body);
+      const address = await user_address.findOne({ where: { user_id: id } });
+      req.body.address.updatedAt = new Date().toJSON().slice(0, 10);
+      if(address){
+        await address.update(req.body.address);
+        data.dataValues.address = address;
+        display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
+        return;
       }
-    else{
-        display.end_result(res,400,{"message": "user not found"});
+      else{
+        display.end_result(res,400,{"message": "user address not found"});
       }
     }
     else{
-        display.end_result(res,400,{"message": "missing the requirements"})
-        return;
+      display.end_result(res,400,{"message": "user not found"});
     }
   }
   catch(err){
