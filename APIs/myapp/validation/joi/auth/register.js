@@ -14,8 +14,10 @@ exports.register_schema = Joi.object({
       "string.empty" : "email cannot be empty",
       "string.email" : "some thing is missing in email format",
     }),
-    password: Joi.string().required().messages({
-      "any.required" : "address is required",
-      "string.empty" : "address cannot be empty",
+    password: Joi.string().min(8).pattern(new RegExp('^[a-zA-Z0-9]{3,10}$')).required().messages({
+      "any.required" : "password is required",
+      "string.empty" : "password cannot be empty",
+      "string.min" : "password must be atleast 8 character",
+      "string.pattern.base" : "Password must be alphanumeric and between 3-10 characters long"
     })
   });
