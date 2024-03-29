@@ -6,15 +6,15 @@ var logger = require('morgan');
 
 //var fileUpload = require('express-fileupload')
 
-var imageRouter = require('./routes/image_upload');
-var imageMulterRouter = require('./routes/image_upload-multer');
+var imageRouter = require('./routes/image_upload/image_upload');
+var imageMulterRouter = require('./routes/image_upload/image_upload-multer');
 
-var usersRouter = require('./routes/users');
-var usersDetailRouter = require('./routes/users_details');
-var userDetailsTable = require('./routes/users_details_table');
-var actorRouter = require('./routes/actor');
-var movieRouter = require('./routes/movie');
-var actorMovieRouter = require('./routes/general');
+var usersRouter = require('./routes/one_to_one/users');
+var usersDetailRouter = require('./routes/one_to_one/users_details');
+var userDetailsTable = require('./routes/one_to_many/users_details_table');
+var actorRouter = require('./routes/many_to_many/actor');
+var movieRouter = require('./routes/many_to_many/movie');
+var actorMovieRouter = require('./routes/many_to_many/general');
 
 
 var app = express();
