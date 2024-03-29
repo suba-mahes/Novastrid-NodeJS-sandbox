@@ -28,7 +28,7 @@ const db ={};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require("./auth/auth.js")(sequelize,Sequelize);
+db.auth = require("./auth/auth.js")(sequelize,Sequelize);
 
 db.user = require("./one_to_one/user_model.js")(sequelize,Sequelize);
 db.user_address = require("./one_to_one/user_address_model.js")(sequelize,Sequelize);

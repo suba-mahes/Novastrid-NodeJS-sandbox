@@ -1,6 +1,6 @@
 var express = require('express');
 var query = require('../../controller/one_to_one/sql_query');
-var auth = require('../../controller/auth/auth_sql');
+var auth = require('../../controller/auth/one_to_one/auth_sql');
 
 var validation = require('../../middleware/one_to_one/validation_user_create')
 var auth_validation = require('../../middleware/auth/auth')
