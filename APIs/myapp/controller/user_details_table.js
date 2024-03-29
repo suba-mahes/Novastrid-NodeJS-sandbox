@@ -80,8 +80,14 @@ exports.update = async(req,res) =>{
     if(data)
     {
       await data.update(req.body);
-      data.dataValues.address = [];
-      for(const address_val of req.body.address){
+
+      if(!req.body.user_address_tables || !req.body.user_address_tables.length){
+        const result = await user.findByPk(id,{ include : user_address });
+        display.end_result(res,200,{"message": "Updated sucessfully","updated_user":result});
+        return;
+      }
+
+      for(const address_val of req.body.user_address_tables){
         const address = await user_address.findOne({ where: { user_address_id: address_val.user_address_id } });
         if(address){
           await address.update(address_val);
@@ -92,7 +98,7 @@ exports.update = async(req,res) =>{
         }
       }
       const result = await user.findByPk(id,{ include: user_address });
-      display.end_result(res,200,result);
+      display.end_result(res,200,{"message": "Updated sucessfully","updated_user":result});
     }
     else{
       display.end_result(res,400,{"message": "user not found"});

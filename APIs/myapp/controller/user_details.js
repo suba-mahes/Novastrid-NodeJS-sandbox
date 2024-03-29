@@ -96,16 +96,11 @@ exports.update = async(req,res) =>{
     
     if(data){
 
-      user_data.updatedAt = new Date().toJSON().slice(0, 10);
+      //user_data.updatedAt = new Date().toJSON().slice(0, 10);
       await data.update(user_data);
 
       if(!req.body.address){
-        
-        const result = await user.findByPk(
-          id,{
-          include : user_address
-        });
-        
+        const result = await user.findByPk(id,{ include : user_address });
         display.end_result(res,200,{"message": "Updated sucessfully","updated_user":result});
         return;
       }
@@ -117,15 +112,15 @@ exports.update = async(req,res) =>{
 
       if(address){
         await address.update(user_address_data);
-        data.dataValues.address = address;
-        display.end_result(res,200,{"message": "Updated sucessfully","updated_user":data});
-        return;
       }
       else{
         display.end_result(res,400,{"message": "user address not found"});
+        return;
       }
+      const result = await user.findByPk(id,{ include : user_address });
+      display.end_result(res,200,{"message": "Updated sucessfully","updated_user":result});
     }
-  else{
+    else{
       display.end_result(res,400,{"message": "user not found"});
     }
   }
