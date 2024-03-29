@@ -29,7 +29,7 @@ module.exports.register = async(req,res) =>{
 
         if(auth_data){
             
-            const token = jwt.sign({ auth_id: auth_data.auth_id,auth_data :email_id }, secret_key, { expiresIn: '1h' });
+            const token = jwt.sign({ auth_id: auth_data.auth_id,email_id :auth_data.email_id }, secret_key, { expiresIn: '1h' });
 
             display.end_result(res,200,{'message':"registered successfully" , 'token':token});
         }
@@ -91,7 +91,7 @@ module.exports.welcome = async(req,res) =>{
         else{
             const data = await auth.findOne({
                 where: {
-                    email_id : user_data.email_id,
+                    email_id : email_id,
                 },
             });
             
