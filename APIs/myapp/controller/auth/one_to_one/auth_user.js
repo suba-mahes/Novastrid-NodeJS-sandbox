@@ -11,7 +11,7 @@ var secret_key = require("../../../config/config.js");
 module.exports.register = async(req,res) =>{
     try{
         const user_data = req.body;
-        const hashed_password = await bcrypt.hash(password,10);
+        const hashed_password = await bcrypt.hash(user_data.password,10);
         user_data.password = hashed_password;
 
         const data = await auth.findOne({
