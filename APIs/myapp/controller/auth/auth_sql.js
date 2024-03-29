@@ -9,6 +9,13 @@ module.exports.register_with_sql = async(req,res) =>{
     try{
         const {name, email_id, password} = req.body;
         const hashed_password = await bcrypt.hash(password,10);
+        
+        const [auth_results,auth_feilds] = await sql_connection.query("select * from auths a where a.email_id = ?",[email_id]);
+        if(auth_results.length){
+            display.end_result(res,200,{'message':"Already registerd email_id"});
+            return;
+        }
+        
         try{
             const [results] = await sql_connection.query("insert into auths (name, email_id, password) values(?,?,?) ",[name, email_id, hashed_password]);
             if(results.affectedRows){
