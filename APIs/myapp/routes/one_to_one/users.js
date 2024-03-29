@@ -1,15 +1,16 @@
 var express = require('express');
 var query = require('../../controller/one_to_one/sql_query');
-var login = require('../../controller/auth/login');
-var register = require('../../controller/auth/register');
+var auth = require('../../controller/auth/auth_sql');
 
 var validation = require('../../middleware/one_to_one/validation_user_create')
-var auth = require('../../middleware/auth/auth')
+var auth_validation = require('../../middleware/auth/auth')
 
 var router = express.Router();
 
-router.post('/login',auth.login);
-router.post('/register', auth.reqister, register.register_with_sql);
+router.post('/login',auth_validation.login, auth.login_with_sql);
+router.post('/register', auth_validation.reqister, auth.register_with_sql);
+router.get('/welcome', auth_validation.authenticate_token, auth.welcome);
+
 
 router.get('/get-allusers',query.getAllUsers);
 router.get('/get-user-by-id/:id',query.getUserByID);
