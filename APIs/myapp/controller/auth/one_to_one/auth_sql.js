@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 var sql_connection = require('../../../model/connection_db.js');
 var display = require("../../result_display.js");
-var secret_key = require("../../../config/config.js");
+var secret_key = require("../../../config/config_auth.js");
 
 module.exports.register_with_sql = async(req,res) =>{
     try{

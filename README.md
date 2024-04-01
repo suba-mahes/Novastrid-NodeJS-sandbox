@@ -11,3 +11,8 @@ npm install bcrypt
 
 npm install jsonwebtoken
 
+npm install --save-dev sequelize-cli
+
+sequelize migration:create --name create-table-name
+
+sequelize db:migrate

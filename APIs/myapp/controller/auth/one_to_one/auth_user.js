@@ -6,7 +6,7 @@ const auth = db.auth;
 const user = db.user;
 
 var display = require("../../result_display.js");
-var secret_key = require("../../../config/config.js");
+var secret_key = require("../../../config/config_auth.js");
 
 module.exports.register = async(req,res) =>{
     try{

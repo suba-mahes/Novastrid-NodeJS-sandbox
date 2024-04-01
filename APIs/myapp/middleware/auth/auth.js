@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-var secret_key = require("../../config/config.js");
+var secret_key = require("../../config/config_auth.js");
 var login = require("../../validation/joi/auth/login.js")
 var register = require('../../validation/joi/auth/register.js')
 var display = require("../../controller/result_display.js");
