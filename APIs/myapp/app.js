@@ -16,6 +16,8 @@ var actorRouter = require('./routes/many_to_many/actor');
 var movieRouter = require('./routes/many_to_many/movie');
 var actorMovieRouter = require('./routes/many_to_many/general');
 
+var excelRouter = require('./routes/excel_upload/excel_upload');
+
 
 var app = express();
 
@@ -34,6 +36,8 @@ app.use('/users/detail/table', userDetailsTable);
 app.use('/actor', actorRouter);
 app.use('/movie', movieRouter);
 app.use('/actor_movie', actorMovieRouter);
+
+app.use('/excel', excelRouter);
 
 
 const db = require("./model");
