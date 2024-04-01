@@ -54,4 +54,7 @@ db.actor_movie = require("./many_to_many/actor_movie_model.js")(sequelize,Sequel
 db.actor.belongsToMany(db.movie,{through : db.actor_movie ,foreignKey: 'actor_id' });
 db.movie.belongsToMany(db.actor, { through: db.actor_movie ,foreignKey: 'movie_id' });
 
+//migration
+db.book = require("./migration/book.js")(sequelize, Sequelize);
+
 module.exports = db;
