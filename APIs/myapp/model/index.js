@@ -1,8 +1,9 @@
 //const db_config = require("../config/connection.js");
-const config = require("../config/config.json");
+var env = "development";
+const config = require("../config/config.json")[env];
 
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(config.database, config.user, config.password, {
+const sequelize = new Sequelize(config.database, config.username, config.password, {
     host : config.host,
     dialect: config.dialect,
     operatorsAliases: false,
