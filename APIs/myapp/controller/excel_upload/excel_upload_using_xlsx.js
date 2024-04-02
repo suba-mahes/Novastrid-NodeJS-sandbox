@@ -10,13 +10,13 @@ exports.uploadExcel =  async(req,res) => {
   try{
 
     const data = req.body;
-
     const workbook = xlsx.utils.book_new();
-
-    const worksheet = xlsx.utils.json_to_sheet(jsonData);
-
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'cricket');
-
+    
+    for(sheet_name of Object.keys(data)){
+      const worksheet = xlsx.utils.json_to_sheet(data[sheet_name]);
+      xlsx.utils.book_append_sheet(workbook, worksheet, sheet_name);
+    }
+    
     // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     // res.setHeader('Content-Disposition', 'attachment; filename="output.xlsx"');
 
@@ -68,7 +68,7 @@ exports.retriveExcel = async(req,res)=>{
 
 exports.retriveExcelWithoutMulter = async(req,res)=>{
   try{
-    if(!req.files || !req.files.excel_file){
+    if(!req.files || Object.keys(req.files).length === 0){
       display.end_result(res,error.status || 400,{"message": "file has to be uploaded."});
       return;
     }

@@ -800,14 +800,14 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"player_name\" : \"aaa\",\r\n        \"team_name\" : \"zzz\"\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"player_name\" : \"bbb\",\r\n        \"team_name\" : \"yyy\"\r\n    }\r\n]",
+									"raw": "{\r\n    \"cricket_1\": [\r\n        {\r\n            \"S.No\": 1,\r\n            \"Player Name\": \"aaa\",\r\n            \"Team Name\": \"zzz\"\r\n        },\r\n        {\r\n            \"S.No\": 2,\r\n            \"Player Name\": \"bbb\",\r\n            \"Team Name\": \"yyy\"\r\n        }\r\n    ],\r\n    \"cricket_2\": [\r\n        {\r\n            \"S.No\": 1,\r\n            \"Player Name\": \"asd\",\r\n            \"Team Name\": \"fgh\"\r\n        },\r\n        {\r\n            \"S.No\": 2,\r\n            \"Player Name\": \"zxc\",\r\n            \"Team Name\": \"vbn\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "{{url}}excel/excel-data"
+								"url": "{{url}}xlsx/excel-data"
 							},
 							"response": []
 						},
