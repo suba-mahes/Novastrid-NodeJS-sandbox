@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-//var fileUpload = require('express-fileupload')
 
 var imageRouter = require('./routes/image_upload/image_upload');
 var imageMulterRouter = require('./routes/image_upload/image_upload-multer');
@@ -24,7 +23,9 @@ var app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cookieParser());
-//app.use(fileUpload());
+
+// var fileUpload = require('express-fileupload')
+// app.use(fileUpload());
 
 
 app.use('/', imageRouter);

@@ -80,3 +80,38 @@ exports.retriveExcel = async(req,res)=>{
     display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred."});
   }
 }
+
+exports.retriveExcelWithoutMulter = async(req,res)=>{
+  try{
+    if(!req.files || !req.files.excel_file){
+      display.end_result(res,error.status || 400,{"message": "file has to be uploaded."});
+      return;
+    }
+    
+    const excel_file = req.files.excel_file;
+    const workbook = new ExcelJS.Workbook();
+    try{
+      await workbook.xlsx.load(excel_file.data)
+      const worksheet = workbook.getWorksheet(1);
+      const data = [];
+      
+      worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return; 
+        const result = {};
+        row.eachCell((cell, colNumber) => {
+            const columnName = worksheet.getRow(1).getCell(colNumber).value;
+            result[columnName] = cell.value;
+        });
+        data.push(result);
+      });
+
+      display.end_result(res,200,data);
+    }
+    catch(error){
+      display.end_result(res,error.status || 500,{"message": error.message || "Some error occurred."});
+    }
+  }
+  catch(err){
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred."});
+  }
+}
