@@ -16,6 +16,7 @@ var movieRouter = require('./routes/many_to_many/movie');
 var actorMovieRouter = require('./routes/many_to_many/general');
 
 var excelRouter = require('./routes/excel_upload/excel_upload');
+var xlsxRouter = require('./routes/excel_upload/excel_upload_using_xlsx');
 
 
 var app = express();
@@ -39,6 +40,7 @@ app.use('/movie', movieRouter);
 app.use('/actor_movie', actorMovieRouter);
 
 app.use('/excel', excelRouter);
+app.use('/xlsx', xlsxRouter);
 
 
 const db = require("./model");

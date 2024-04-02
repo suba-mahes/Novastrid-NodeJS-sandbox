@@ -24,4 +24,4 @@ sequelize db:seed:undo
 
 :status    //this says the list of files in it.
 
-npm install exceljs
+npm install exceljs xlsx
