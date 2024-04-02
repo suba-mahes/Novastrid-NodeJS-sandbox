@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "45e20592-5bd4-42db-9ad1-cf709ef2daaf",
-		"name": "curd - using MYSQL and express JS",
+		"name": "APIs",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "33285105"
 	},
@@ -727,63 +727,129 @@
 			]
 		},
 		{
-			"name": "excel",
+			"name": "excel with node JS",
 			"item": [
 				{
 					"name": "excel",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"player_name\" : \"aaa\",\r\n        \"team_name\" : \"zzz\"\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"player_name\" : \"bbb\",\r\n        \"team_name\" : \"yyy\"\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+					"item": [
+						{
+							"name": "excel",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"player_name\" : \"aaa\",\r\n        \"team_name\" : \"zzz\"\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"player_name\" : \"bbb\",\r\n        \"team_name\" : \"yyy\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}excel/excel-data"
+							},
+							"response": []
 						},
-						"url": "{{url}}excel/excel-data"
-					},
-					"response": []
+						{
+							"name": "excel-retrive",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "excel_file",
+											"type": "file",
+											"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712037435250.xlsx"
+										}
+									]
+								},
+								"url": "{{url}}excel/json-data"
+							},
+							"response": []
+						},
+						{
+							"name": "excel-retrive using multer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "excel_file",
+											"type": "file",
+											"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712041499953.xlsx"
+										}
+									]
+								},
+								"url": "{{url}}excel/multer/json-data"
+							},
+							"response": []
+						}
+					]
 				},
 				{
-					"name": "excel-retrive",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "excel_file",
-									"type": "file",
-									"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712037435250.xlsx"
-								}
-							]
+					"name": "xlsx",
+					"item": [
+						{
+							"name": "excel",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"player_name\" : \"aaa\",\r\n        \"team_name\" : \"zzz\"\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"player_name\" : \"bbb\",\r\n        \"team_name\" : \"yyy\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}excel/excel-data"
+							},
+							"response": []
 						},
-						"url": "{{url}}excel/json-data"
-					},
-					"response": []
-				},
-				{
-					"name": "excel-retrive using multer",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "excel_file",
-									"type": "file",
-									"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712040477229.xlsx"
-								}
-							]
+						{
+							"name": "excel-retrive",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "excel_file",
+											"type": "file",
+											"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712037435250.xlsx"
+										}
+									]
+								},
+								"url": "{{url}}excel/json-data"
+							},
+							"response": []
 						},
-						"url": "{{url}}excel/multer/json-data"
-					},
-					"response": []
+						{
+							"name": "excel-retrive using multer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "excel_file",
+											"type": "file",
+											"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712041499953.xlsx"
+										}
+									]
+								},
+								"url": "{{url}}xlsx/multer/json-data"
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}

@@ -48,12 +48,12 @@ exports.retriveExcel = async(req,res)=>{
     try{
 
       const result = {};
-      const workbook = xlsx.read(req.file.buffer, { type: 'buffer' })
+      const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
       for(sheets of workbook.SheetNames)
       {
         const worksheet = workbook.Sheets[sheets];
         const data = xlsx.utils.sheet_to_json(worksheet);
-        result.sheets = data;
+        result[sheets] = data;
       }
       display.end_result(res,200,result);
     }
@@ -81,7 +81,7 @@ exports.retriveExcelWithoutMulter = async(req,res)=>{
       {
         const worksheet = workbook.Sheets[sheets];
         const data = xlsx.utils.sheet_to_json(worksheet);
-        result.sheets = data;
+        result[sheets] = data;
       }
       display.end_result(res,200,result);
     }
