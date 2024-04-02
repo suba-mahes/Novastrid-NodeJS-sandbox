@@ -12,7 +12,6 @@ exports.getImage =  async(req,res) => {
 
 exports.insertImage = async(req, res) => {
   try{
-    console.log("hai");
     if (req.file) {
       display.end_result(res,200,{ message: 'Image uploaded successfully'+ image.name });
       return;

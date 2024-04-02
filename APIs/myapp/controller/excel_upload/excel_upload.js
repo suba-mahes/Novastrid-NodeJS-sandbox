@@ -4,7 +4,7 @@ var display = require("../result_display.js");
 
 const path = require('path');
 
-const uploadDir = 'I:\node_js\Novastrid-NodeJS-sandbox\APIs\myapp\excel-download';
+const uploadDir = '/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download';
 
 exports.uploadExcel =  async(req,res) => {
   try{
@@ -25,17 +25,58 @@ exports.uploadExcel =  async(req,res) => {
       worksheet.addRow(item);
     });
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename="output.xlsx"');
+    // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    // res.setHeader('Content-Disposition', 'attachment; filename="output.xlsx"');
 
-    await workbook.xlsx.write(res)
+    // await workbook.xlsx.write(res)
 
-    // const filename = `output_${Date.now()}.xlsx`;
-    // const filepath = path.join(__dirname, filename);
-    // await workbook.xlsx.writeFile(filepath);
-    //res.sendFile(filepath);
+    const filename = `output_${Date.now()}.xlsx`;
+    const filepath = path.join(uploadDir, filename);
+    console.log(filepath)
+    try{
+      await workbook.xlsx.writeFile(filepath);
+      display.end_result(res,200,{ message: 'File is uploaded sucessfully' });
+    }
+    catch(error){
+      display.end_result(res,error.status || 500,{"message": error.message || "Some error occurred."});
+    }  
   }
   catch(err){
     display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred."});
   }
 };
+
+
+exports.retriveExcel = async(req,res)=>{
+  try{
+    if(!req.file){
+      display.end_result(res,error.status || 400,{"message": "file has to be uploaded."});
+      return;
+    }
+    
+    const workbook = new ExcelJS.Workbook();
+    try{
+      await workbook.xlsx.readFile(req.file.path)
+      const worksheet = workbook.getWorksheet(1);
+      const data = [];
+      
+      worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return; 
+        const result = {};
+        row.eachCell((cell, colNumber) => {
+            const columnName = worksheet.getRow(1).getCell(colNumber).value;
+            result[columnName] = cell.value;
+        });
+        data.push(result);
+      });
+
+      display.end_result(res,200,data);
+    }
+    catch(error){
+      display.end_result(res,error.status || 500,{"message": error.message || "Some error occurred."});
+    }
+  }
+  catch(err){
+    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred."});
+  }
+}
