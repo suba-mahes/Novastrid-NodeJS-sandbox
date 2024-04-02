@@ -529,6 +529,28 @@
 					"item": [
 						{
 							"name": "register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"try {\r",
+											"    const responseBody = pm.response.json();\r",
+											"\r",
+											"    const token = responseBody.token;\r",
+											"\r",
+											"    pm.environment.set('token', token);\r",
+											"} \r",
+											"catch (error) {\r",
+											"    console.error('Error parsing response body:', error);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -547,12 +569,34 @@
 						},
 						{
 							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"try {\r",
+											"    const responseBody = pm.response.json();\r",
+											"\r",
+											"    const token = responseBody.token;\r",
+											"\r",
+											"    pm.environment.set('token', token);\r",
+											"} \r",
+											"catch (error) {\r",
+											"    console.error('Error parsing response body:', error);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email_id\" : \"aba@gmail.com\",\r\n    \"password\" : \"46hvj\"\r\n}",
+									"raw": "{\r\n    \"email_id\" : \"qqq@gmail.com\",\r\n    \"password\" : \"passSDd123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -569,7 +613,7 @@
 								"auth": {
 									"type": "bearer",
 									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoX2lkIjoxLCJlbWFpbF9pZCI6InFxcUBnbWFpbC5jb20iLCJpYXQiOjE3MTE3MDgwOTEsImV4cCI6MTcxMTcxMTY5MX0.hpTk1lxJ-omANQxjDW8ldbtu3A4bOowbvhDKAK4_a04"
+										"token": "{{token}}"
 									}
 								},
 								"method": "GET",
@@ -585,12 +629,34 @@
 					"item": [
 						{
 							"name": "register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"try {\r",
+											"    const responseBody = pm.response.json();\r",
+											"\r",
+											"    const token = responseBody.token;\r",
+											"\r",
+											"    pm.environment.set('token', token);\r",
+											"} \r",
+											"catch (error) {\r",
+											"    console.error('Error parsing response body:', error);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\" : \"insu\",\r\n    \"email_id\" : \"qqq@gmail.com\",\r\n    \"password\" : \"passSDd123\"\r\n}",
+									"raw": "{\r\n    \"name\" : \"insu\",\r\n    \"email_id\" : \"sd@gmail.com\",\r\n    \"password\" : \"passSDd123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -603,12 +669,34 @@
 						},
 						{
 							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"try {\r",
+											"    const responseBody = pm.response.json();\r",
+											"\r",
+											"    const token = responseBody.token;\r",
+											"\r",
+											"    pm.environment.set('token', token);\r",
+											"} \r",
+											"catch (error) {\r",
+											"    console.error('Error parsing response body:', error);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email_id\" : \"qqq@gmail.com\",\r\n    \"password\" : \"passSDd123\"\r\n}",
+									"raw": "{\r\n    \"email_id\" : \"qq@gmail.com\",\r\n    \"password\" : \"passSDd123\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -625,7 +713,7 @@
 								"auth": {
 									"type": "bearer",
 									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoX2lkIjoxLCJlbWFpbF9pZCI6InFxcUBnbWFpbC5jb20iLCJpYXQiOjE3MTE3MDg1MjIsImV4cCI6MTcxMTcxMjEyMn0.IF-1B_i7h0dTMJGb2eRqdOHcSFnOQ9XY2CznyV-4-sM"
+										"token": "{{token}}"
 									}
 								},
 								"method": "GET",
@@ -635,6 +723,67 @@
 							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "excel",
+			"item": [
+				{
+					"name": "excel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\":1,\r\n        \"player_name\" : \"aaa\",\r\n        \"team_name\" : \"zzz\"\r\n    },\r\n    {\r\n        \"id\":2,\r\n        \"player_name\" : \"bbb\",\r\n        \"team_name\" : \"yyy\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}excel/excel-data"
+					},
+					"response": []
+				},
+				{
+					"name": "excel-retrive",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "excel_file",
+									"type": "file",
+									"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712037435250.xlsx"
+								}
+							]
+						},
+						"url": "{{url}}excel/json-data"
+					},
+					"response": []
+				},
+				{
+					"name": "excel-retrive using multer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "excel_file",
+									"type": "file",
+									"src": "/I:/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/output_1712040477229.xlsx"
+								}
+							]
+						},
+						"url": "{{url}}excel/multer/json-data"
+					},
+					"response": []
 				}
 			]
 		}
