@@ -30,7 +30,7 @@ exports.uploadExcel =  async(req,res) => {
 
     // await workbook.xlsx.write(res)
 
-    const filename = `output_${Date.now()}.xlsx`;
+    const filename = `output_exceljs_${Date.now()}.xlsx`;
     const filepath = path.join(uploadDir, filename);
     console.log(filepath)
     try{
@@ -56,7 +56,7 @@ exports.retriveExcel = async(req,res)=>{
     
     const workbook = new ExcelJS.Workbook();
     try{
-      await workbook.xlsx.readFile(req.file.path)
+      await workbook.xlsx.load(req.file.buffer);
       const worksheet = workbook.getWorksheet(1);
       const data = [];
       

@@ -11,30 +11,22 @@ exports.uploadExcel =  async(req,res) => {
 
     const data = req.body;
 
-    const workbook = new xlsx.Workbook();
+    const workbook = xlsx.utils.book_new();
 
-    const worksheet = workbook.addWorksheet('cricket');
+    const worksheet = xlsx.utils.json_to_sheet(jsonData);
 
-    worksheet.columns = [
-      { key: 'id', header: 'S.No' },
-      { key: 'player_name', header: 'Player Name' },
-      { key: 'team_name', header: 'Team Name' },
-    ];
-
-    data.forEach(item => {
-      worksheet.addRow(item);
-    });
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'cricket');
 
     // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     // res.setHeader('Content-Disposition', 'attachment; filename="output.xlsx"');
 
     // await workbook.xlsx.write(res)
 
-    const filename = `output_${Date.now()}.xlsx`;
+    const filename = `output_xlsx_${Date.now()}.xlsx`;
     const filepath = path.join(uploadDir, filename);
     console.log(filepath)
     try{
-      await workbook.xlsx.writeFile(filepath);
+      await xlsx.writeFile(workbook, filepath);
       display.end_result(res,200,{ message: 'File is uploaded sucessfully' });
     }
     catch(error){
@@ -56,7 +48,7 @@ exports.retriveExcel = async(req,res)=>{
     try{
 
       const result = {};
-      const workbook = xlsx.readFile(req.file.path)
+      const workbook = xlsx.read(req.file.buffer, { type: 'buffer' })
       for(sheets of workbook.SheetNames)
       {
         const worksheet = workbook.Sheets[sheets];
@@ -82,23 +74,16 @@ exports.retriveExcelWithoutMulter = async(req,res)=>{
     }
     
     const excel_file = req.files.excel_file;
-    const workbook = new xlsx.Workbook();
     try{
-      await workbook.xlsx.load(excel_file.data)
-      const worksheet = workbook.getWorksheet(1);
-      const data = [];
-      
-      worksheet.eachRow((row, rowNumber) => {
-        if (rowNumber === 1) return; 
-        const result = {};
-        row.eachCell((cell, colNumber) => {
-            const columnName = worksheet.getRow(1).getCell(colNumber).value;
-            result[columnName] = cell.value;
-        });
-        data.push(result);
-      });
-
-      display.end_result(res,200,data);
+      const result = {};
+      const workbook = xlsx.read(excel_file.data, { type: 'buffer' });
+      for(sheets of workbook.SheetNames)
+      {
+        const worksheet = workbook.Sheets[sheets];
+        const data = xlsx.utils.sheet_to_json(worksheet);
+        result.sheets = data;
+      }
+      display.end_result(res,200,result);
     }
     catch(error){
       display.end_result(res,error.status || 500,{"message": error.message || "Some error occurred."});

@@ -25,8 +25,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(cookieParser());
 
-// var fileUpload = require('express-fileupload')
-// app.use(fileUpload());
+var fileUpload = require('express-fileupload')
+app.use(fileUpload());
 
 
 app.use('/', imageRouter);
