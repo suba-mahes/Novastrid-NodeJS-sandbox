@@ -132,7 +132,7 @@ module.exports.deleteUserByID = async(req,res)=>{
                 return;
             }
             else{
-                display.end_result(res,404,{'message':"user isnot found"});
+                display.end_result(res,404,{'message':"user is not found"});
                 return;
             }
         }
