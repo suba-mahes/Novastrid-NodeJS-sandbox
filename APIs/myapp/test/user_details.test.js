@@ -51,7 +51,7 @@ describe('register a user which is already registered', function() {
             });
     });
     
-    it("welcome page", function(done){
+    it("welcome page (403-error)", function(done){
         request(app)
             .get('/users/detail/welcome')
             .set('Authorization', `Bearer ${user_token}`)
@@ -80,7 +80,7 @@ describe('register a user', function() {
 
         const req_data = {
             "name" : "insu",
-            "email_id" : "inbalovesuba@gmail.com",
+            "email_id" : "inbaloveeesuba@gmail.com",
             "password" : "passSDd123"
         }
 
@@ -177,7 +177,7 @@ describe('login a user', function() {
             })
     })
 
-    it("welcome page", function(done){
+    it("welcome page - (401-error)", function(done){
         request(app)
             .get('/users/detail/welcome')
             //.set('Authorization', `Bearer ${}`)
@@ -255,14 +255,14 @@ describe('CURD FOR a user', function() {
     //creating
     it('should create a user on post ', function(done) {
         const req_data = {
-            "first_name": "asa",
+            "first_name": "insu",
             "last_name": "zzz",
-            "email_id": "sgf@gmail.com",
-            "address":{
+            "email_id": "insuba@gmail.com",
+            "address": {
                 "address1": "1659 ewsb",
-                "address2": "tnhb colon,villapuram",
+                "address2": "f colon,villapuram",
                 "city": "Madurai",
-                "state": "f nadu",
+                "state": "Tamil nadu",
                 "country": "India"
             }
         }
@@ -338,7 +338,7 @@ describe('CURD FOR a user', function() {
                     return done(new Error('Response body is not an object'));
                 }
 
-                const result = res.body; 
+                const result = res.body.updated_user; 
                 if(!result.user_id || !result.first_name || !result.last_name || !result.email_id  || !result.user_address){
                     return done(new Error('updation is not successfull'));
                 }
@@ -368,7 +368,7 @@ describe('CURD FOR a user', function() {
     });
 
     //deleting
-    it('should delete the user by id DELETE', function(done) {
+    it('should delete the user by id (404-error) DELETE', function(done) {
         request(app)
             .delete(`/users/detail/delete-user-by-id/${id}`)
             .expect(404)
@@ -379,7 +379,7 @@ describe('CURD FOR a user', function() {
                     return done(new Error('Response body is not an object'));
                 }
 
-                if (res.body.message !== "user is not found") {
+                if (res.body.message !== "user not found") {
                     return done(new Error('deletion is not successfull'));
                 }
 
@@ -388,7 +388,7 @@ describe('CURD FOR a user', function() {
     });
 
     //getting by ID
-    it('should return a user on GET ', function(done) {
+    it('should return a user (404-error) on GET ', function(done) {
         request(app)
             .get(`/users/detail/get-user-by-id/${id}`)
             .expect(404)
@@ -408,62 +408,3 @@ describe('CURD FOR a user', function() {
     });
 
 });
-
-// describe('delete get by id Tests', function() {
-//     it('should delete the user by id DELETE', function(done) {
-//         const id = 22;
-//         request(app)
-//             .delete(`/users/detail/delete-user-by-id/${id}`)
-//             .expect(200)
-//             .end(function(err, res) {
-//                 if(err) return done(res.body || err);
-
-//                 if (!res.body || typeof res.body !== 'object') {
-//                     return done(new Error('Response body is not an object'));
-//                 }
-
-//                 if (res.body.message !== "deleted successfully") {
-//                     return done(new Error('deletion is not successfull'));
-//                 }
-
-//                 done();
-//             });
-//     });
-
-// });
-
-// describe('update a user', function() {
-//     it('should update a user on put ', function(done) {
-//         const id = 1;
-//         const req_data = {
-//             "first_name": "hai",
-//             "last_name": "zzz",
-//             "email_id": "aa@gmail.com",
-//             "address":{
-//                 "address1": "1659 ewsb",
-//                 "address2": "tnhb colon,villapuram",
-//                 "city": "Madurai",
-//                 "state": "f nadu",
-//                 "country": "India"
-//             }
-//         }
-//         request(app)
-//             .put(`/users/detail/update-user/${id}`)
-//             .send(req_data)
-//             .expect(200)
-//             .end(function(err, res) {
-//                 if(err) return done(res.body || err);
-
-//                 if (!res.body || typeof res.body !== 'object') {
-//                     return done(new Error('Response body is not an object'));
-//                 }
-
-//                 if(!result.user_id || !result.first_name || !result.last_name || !result.email_id  || !result.user_address){
-//                     return done(new Error('updation is not successfull'));
-//                 }
-
-//                 done();
-//             });
-//     });
-
-// });

@@ -143,11 +143,11 @@ exports.deleteByID = async(req,res) =>{
         await address.destroy();
       }    
       await data.destroy();
-      display.end_result(res,200,{"message": "deleted sucessfully"});
+      display.end_result(res,200,{"message": "deleted successfully"});
       return;
     }
     else{
-      display.end_result(res,400,{"message": "user not found"});
+      display.end_result(res,404,{"message": "user not found"});
       return
     }
   }
