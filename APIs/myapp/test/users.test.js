@@ -21,7 +21,6 @@ afterEach(function(done){
     console.log("---let's end the test---\n");
     done();
 });
-
 describe('register a user which is already registered', function() {
     let user_token;
 
@@ -51,7 +50,7 @@ describe('register a user which is already registered', function() {
             });
     });
     
-    it("welcome page", function(done){
+    it("welcome page (403-error)", function(done){
         request(app)
             .get('/users/welcome')
             .set('Authorization', `Bearer ${user_token}`)
@@ -80,7 +79,7 @@ describe('register a user', function() {
 
         const req_data = {
             "name" : "insu",
-            "email_id" : "inbasubalove@gmail.com",
+            "email_id" : "inbaloveeesuba@gmail.com",
             "password" : "passSDd123"
         }
 
@@ -170,6 +169,27 @@ describe('login a user', function() {
 
                 const result = res.body; 
                 if((!result.user_id || !result.first_name || !result.last_name || !result.email_id)  && (!result.name || !result.message)){
+                    return done(new Error('error'));
+                }
+                
+                done();
+            })
+    })
+
+    it("welcome page - (401-error)", function(done){
+        request(app)
+            .get('/users/welcome')
+            //.set('Authorization', `Bearer ${}`)
+            .expect(401)
+            .end(function(err, res) {
+                if(err) return done(res.body || err);
+
+                if (!res.body || typeof res.body !== 'object') {
+                    return done(new Error('Response body is not an object'));
+                }
+
+                const result = res.body; 
+                if(result.message !== "Token not provided"){
                     return done(new Error('error'));
                 }
                 
