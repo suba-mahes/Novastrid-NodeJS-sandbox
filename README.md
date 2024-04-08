@@ -28,4 +28,4 @@ npm install exceljs xlsx
 
 npm install --save-dev mocha chai supertest
 
-npm install @babel/register --save-dev
+npm install node-cron axios

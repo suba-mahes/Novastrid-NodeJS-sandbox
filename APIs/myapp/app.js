@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('./corn_job/corn_job_for_users_by_id');
 
 var imageRouter = require('./routes/image_upload/image_upload');
 var imageMulterRouter = require('./routes/image_upload/image_upload-multer');
