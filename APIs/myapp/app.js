@@ -7,6 +7,9 @@ var logger = require('morgan');
 //require('./corn_job/corn_job_for_users_by_id');
 //require('./corn_job/corn_job_for_users_day_update');
 require('./corn_job/corn_job_for_sending_mails');
+//require('./corn_job/corn_job_for_sending_mails_with_templete');
+
+//require('./controller/corn_job/corn_job');
 
 
 var imageRouter = require('./routes/image_upload/image_upload');
