@@ -13,8 +13,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-//exports.task = cron.schedule('*/60 * * * * *', async () => {
-exports.task = cron.schedule('0 9 * * *', async () => {
+exports.task = cron.schedule('*/60 * * * * *', async () => {
     try {
         try{
             const response = await axios.get(`http://localhost:3000/users/get-allusers`);
@@ -48,3 +47,5 @@ exports.task = cron.schedule('0 9 * * *', async () => {
 }, {
     scheduled: true, 
 });
+
+

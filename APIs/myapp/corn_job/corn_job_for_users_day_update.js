@@ -5,8 +5,8 @@ const xlsx = require('xlsx');
 
 const uploadDir = '/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/excel-download/users.xlsx';
 
-//cron.schedule('*/60 * * * * *', async () => {
-cron.schedule('0 0 0 * * *', async () => {
+//exports.task = cron.schedule('*/60 * * * * *', async () => {
+exports.task = cron.schedule('0 0 0 * * *', async () => {
     try {
         let response;
         //do{

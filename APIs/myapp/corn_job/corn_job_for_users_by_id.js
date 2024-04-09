@@ -1,9 +1,8 @@
 const cron = require('node-cron');
 const axios = require('axios');
-const { response } = require('../app');
 
 
-cron.schedule('*/30 * * * * *', async () => {
+exports.task = cron.schedule('*/30 * * * * *', async () => {
     try {
 
         let id = 0;
