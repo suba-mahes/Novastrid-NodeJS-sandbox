@@ -10,9 +10,7 @@ exports.getImage = async (req, res) => {
     console.log(file_name);
     res.sendFile(file_name, { root: "file_images" });
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
 
@@ -36,8 +34,6 @@ exports.insertImage = async (req, res) => {
       message: "Image uploaded successfully" + image.name,
     });
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };

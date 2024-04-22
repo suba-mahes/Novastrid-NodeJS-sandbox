@@ -11,6 +11,14 @@ npm install bcrypt
 
 npm install jsonwebtoken
 
+npm install exceljs xlsx
+
+npm install --save-dev mocha chai supertest
+
+npm install node-cron axios nodemailer ejs
+
+npm install puppeteer html-pdf pdfkit
+
 npm install --save-dev sequelize-cli
 
 sequelize migration:create --name create-table-name
@@ -23,11 +31,3 @@ sequelize db:seed:all
 sequelize db:seed:undo
 
 :status    //this says the list of files in it.
-
-npm install exceljs xlsx
-
-npm install --save-dev mocha chai supertest
-
-npm install node-cron axios nodemailer ejs
-
-npm install puppeteer html-pdf pdfkit

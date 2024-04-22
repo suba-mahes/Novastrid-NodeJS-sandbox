@@ -41,9 +41,7 @@ exports.uploadExcel = async (req, res) => {
       });
     }
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
 
@@ -79,9 +77,7 @@ exports.retriveExcel = async (req, res) => {
       });
     }
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
 
@@ -118,8 +114,6 @@ exports.retriveExcelWithoutMulter = async (req, res) => {
       });
     }
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };

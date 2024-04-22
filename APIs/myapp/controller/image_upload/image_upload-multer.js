@@ -5,9 +5,7 @@ exports.getImage = async (req, res) => {
     const file_name = req.params.imageName;
     res.sendFile(file_name, { root: "file_images" });
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
 
@@ -22,8 +20,6 @@ exports.insertImage = async (req, res) => {
       display.end_result(res, 400, { error: "No files were uploaded" });
     }
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };

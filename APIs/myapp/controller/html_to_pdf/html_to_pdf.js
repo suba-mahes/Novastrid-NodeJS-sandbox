@@ -30,9 +30,7 @@ exports.using_puppeteer = async (req, res) => {
       //   (err) => {
       //   // Provide a callback function here
       //   if (err) {
-      //     display.end_result(res, err.status || 500, {
-      //       message: err.message || "Some error occurred.",
-      //     });
+      //     display.end_error_result(res, error);
       //   } else {
       //     display.end_result(res, 200, {
       //       message: "File is uploaded successfully",
@@ -41,15 +39,11 @@ exports.using_puppeteer = async (req, res) => {
       // });
       //    res.sendFile(file_path);
     } catch (error) {
-      display.end_result(res, error.status || 500, {
-        message: error.message || "Some error occurred.",
-      });
+      display.end_error_result(res, error);
     }
     await browser.close();
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
 
@@ -59,9 +53,7 @@ exports.using_html_pdf = async (req, res) => {
 
     html_pdf.create(html).toBuffer((err, buffer) => {
       if (err) {
-        display.end_result(res, error.status || 500, {
-          message: err || "Some error occurred.",
-        });
+        display.end_error_result(res, error);
       } else {
         const filename = `output_pdf_html-pdf_${Date.now()}.pdf`;
         const file_path = path.join(upload_dir, filename);
@@ -76,8 +68,8 @@ exports.using_html_pdf = async (req, res) => {
           // , (err) => {
           //   // Provide a callback function here
           //   if (err) {
-          //     display.end_result(res, err.status || 500, {
-          //       message: err.message || "Some error occurred.",
+          //     display.end_error_result(res, error);
+          //
           //     });
           //   } else {
           //     display.end_result(res, 200, {
@@ -87,16 +79,12 @@ exports.using_html_pdf = async (req, res) => {
           // });
           //    res.sendFile(file_path);
         } catch (error) {
-          display.end_result(res, error.status || 500, {
-            message: error.message || "Some error occurred.",
-          });
+          display.end_error_result(res, error);
         }
       }
     });
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
 
@@ -130,8 +118,6 @@ exports.using_pdfkit = async (req, res) => {
     doc.text(html);
     doc.end();
   } catch (err) {
-    display.end_result(res, err.status || 500, {
-      message: err.message || "Some error occurred.",
-    });
+    display.end_error_result(res, err);
   }
 };
