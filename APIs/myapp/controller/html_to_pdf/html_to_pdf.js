@@ -21,7 +21,15 @@ exports.using_puppeteer = async (req, res) => {
     const filename = `output_pdf_puppeteer_${Date.now()}.pdf`;
     const file_path = path.join(uploadDir, filename);
     try {
-      fs.writeFile(file_path, pdf_buffer);
+      fs.writeFile(file_path, pdf_buffer, (err) => { // Provide a callback function here
+        if (err) {
+          display.end_result(res, err.status || 500, {
+            message: err.message || "Some error occurred.",
+          });
+        } else {
+          display.end_result(res, 200, { message: "File is uploaded successfully" });
+        }
+      });
       //    res.sendFile(file_path);
 
       //   res.set({
@@ -30,7 +38,6 @@ exports.using_puppeteer = async (req, res) => {
       // });
       // res.send(pdf_buffer);
 
-      display.end_result(res, 200, { message: "File is uploaded sucessfully" });
     } catch (error) {
       display.end_result(res, error.status || 500, {
         message: error.message || "Some error occurred.",
@@ -57,12 +64,16 @@ exports.using_html_pdf = async (req, res) => {
         const filename = `output_pdf_html-pdf_${Date.now()}.pdf`;
         const file_path = path.join(uploadDir, filename);
         try {
-          fs.writeFile(file_path, buffer);
-          //    res.sendFile(file_path);
-
-          display.end_result(res, 200, {
-            message: "File is uploaded sucessfully",
+          fs.writeFile(file_path, buffer, (err) => { // Provide a callback function here
+            if (err) {
+              display.end_result(res, err.status || 500, {
+                message: err.message || "Some error occurred.",
+              });
+            } else {
+              display.end_result(res, 200, { message: "File is uploaded successfully" });
+            }
           });
+          //    res.sendFile(file_path);
         } catch (error) {
           display.end_result(res, error.status || 500, {
             message: error.message || "Some error occurred.",
