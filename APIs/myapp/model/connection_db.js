@@ -25,26 +25,24 @@
 
 // module.exports = connection;
 
-const mysql = require('mysql2/promise');
+const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'insu0418',
-    port: 3306,
-    database: 'db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+  host: "localhost",
+  user: "root",
+  password: "insu0418",
+  port: 3306,
+  database: "db",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
-try{
-    connection_data = pool.getConnection();
-    console.log("connected sucessfully")
+try {
+  connection_data = pool.getConnection();
+  console.log("connected sucessfully");
+} catch (err) {
+  console.error("Error connecting to MySQL: ", err);
+  return;
 }
-catch(err) {
-    console.error('Error connecting to MySQL: ', err);
-    return;
-}
-
 
 module.exports = pool;

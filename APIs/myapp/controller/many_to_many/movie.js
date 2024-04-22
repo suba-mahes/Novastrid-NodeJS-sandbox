@@ -9,187 +9,190 @@ const op = sequelize.Op;
 const validation = require("../../validation/validation_movie");
 var display = require("../../controller/result_display.js");
 
-exports.findAll = async(req,res) => {
-  try{
-    
+exports.findAll = async (req, res) => {
+  try {
     const data = await movie.findAll({
-      include: [{
-        model:actor,
-        through: {
-          attributes: [],
-        }
-      }] 
+      include: [
+        {
+          model: actor,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
     });
 
-
-    if(data){
-      display.end_result(res,200,data);  
-    }
-    else{
-      display.end_result(res,200,{'movie': data, 'message': 'table is empty'});
+    if (data) {
+      display.end_result(res, 200, data);
+    } else {
+      display.end_result(res, 200, { movie: data, message: "table is empty" });
       return;
     }
-  }
-  catch(err){
-    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movies."})
+  } catch (err) {
+    display.end_result(res, err.status || 500, {
+      message: err.message || "Some error occurred while retrieving movies.",
+    });
     return;
   }
 };
 
-exports.findID = async(req,res) => {
-  try{
-    let id = parseInt(req.params.id); 
+exports.findID = async (req, res) => {
+  try {
+    let id = parseInt(req.params.id);
 
-    if(!id){
-      display.end_result(res,404,{"message":'parameter is empty'});  
+    if (!id) {
+      display.end_result(res, 404, { message: "parameter is empty" });
       return;
     }
 
     const data = await movie.findOne({
       where: {
-        movie_id : id,
+        movie_id: id,
       },
-      include :[{
-        model: actor,
-        through:{
-          attributes: [],
-        }
-      }]
-    })
-    
-    if(data){
-      display.end_result(res,200,data);  
+      include: [
+        {
+          model: actor,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+
+    if (data) {
+      display.end_result(res, 200, data);
+      return;
+    } else {
+      display.end_result(res, 404, { message: "movie is not found" });
       return;
     }
-    else{
-        display.end_result(res,404,{"message":'movie is not found'});  
-        return;
-    }
-  }
-  catch(err){
-    display.end_result(res,err.status || 500,{"message": err.message || "Some error occurred while retrieving movies."})
+  } catch (err) {
+    display.end_result(res, err.status || 500, {
+      message: err.message || "Some error occurred while retrieving movies.",
+    });
   }
 };
 
-exports.create = async(req, res) => {
-  try{
+exports.create = async (req, res) => {
+  try {
     // Create a actor
     const movie_data = req.body;
 
     const actor_data = req.body.actors;
-    
-    // Save actor in the database
-    const data = await movie.create({
-      ...movie_data,
-      actor:[{...actor_data}]
-    },
-    {
-      include: actor
-    });
 
-    if(data){
-      display.end_result(res,200,data);
+    // Save actor in the database
+    const data = await movie.create(
+      {
+        ...movie_data,
+        actor: [{ ...actor_data }],
+      },
+      {
+        include: actor,
+      }
+    );
+
+    if (data) {
+      display.end_result(res, 200, data);
+    } else {
+      display.end_result(res, 404, {
+        message: "insertion failed at movie table",
+      });
     }
-    else{
-      display.end_result(res,404,{"message":"insertion failed at movie table"});
-    }
-  }
-  catch(err){
-    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})
+  } catch (err) {
+    display.end_result(res, err.status || 500, {
+      message: err.message || "Some error occurred while creating the movie.",
+    });
   }
 };
 
-exports.create_with_actor_id = async(req, res) => {
-  try{
+exports.create_with_actor_id = async (req, res) => {
+  try {
     // Create a actor
     const movie_data = req.body;
 
     const actor_data = req.body.actor_id;
 
-    const {count, rows} = await actor.findAndCountAll({
-      where : {
-        actor_id: {[op.in]: actor_data}
-      }
+    const { count, rows } = await actor.findAndCountAll({
+      where: {
+        actor_id: { [op.in]: actor_data },
+      },
     });
 
-    if(count === actor_data.length){
-
+    if (count === actor_data.length) {
       const data = await movie.create({
-        ...movie_data
+        ...movie_data,
       });
-      
+
       await data.addActors(rows);
 
-      if(data){
-        display.end_result(res,200,data);
+      if (data) {
+        display.end_result(res, 200, data);
+      } else {
+        display.end_result(res, 404, {
+          message: "insertion failed at movie table",
+        });
       }
-      else{
-        display.end_result(res,404,{"message":"insertion failed at movie table"});
-      }
-    }  
-    else{
-      display.end_result(res,404,{"message":"invalid actor id"});
-    }  
-  }
-  catch(err){
-    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while creating the movie."})
+    } else {
+      display.end_result(res, 404, { message: "invalid actor id" });
+    }
+  } catch (err) {
+    display.end_result(res, err.status || 500, {
+      message: err.message || "Some error occurred while creating the movie.",
+    });
   }
 };
 
-exports.update = async(req,res) =>{
-  try{
+exports.update = async (req, res) => {
+  try {
     let id = parseInt(req.params.id);
 
-    if(validation.validation_movie(req.body)){
-      const data = await movie.findByPk(id)
-      if(data)
-      {
+    if (validation.validation_movie(req.body)) {
+      const data = await movie.findByPk(id);
+      if (data) {
         await data.update(req.body);
-        display.end_result(res,200,data);
+        display.end_result(res, 200, data);
+      } else {
+        display.end_result(res, 400, { message: "movie not found" });
       }
-      else{
-          display.end_result(res,400,{"message": "movie not found"});
-        }
+    } else {
+      display.end_result(res, 400, { message: "missing the requirements" });
+      return;
     }
-    else{
-        display.end_result(res,400,{"message": "missing the requirements"})
-        return;
-    }
-  }
-  catch(err){
-    display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while updating the movie."})
+  } catch (err) {
+    display.end_result(res, err.status || 500, {
+      message: err.message || "Some error occurred while updating the movie.",
+    });
   }
 };
 
-exports.deleteByID = async(req,res) =>{
-  try{
+exports.deleteByID = async (req, res) => {
+  try {
     let id = parseInt(req.params.id);
-    
-    if(!id){
-      display.end_result(res,404,{"message":'parameter is empty'});  
+
+    if (!id) {
+      display.end_result(res, 404, { message: "parameter is empty" });
       return;
     }
 
-    data = await movie.findByPk(id)
-    if(data){
+    data = await movie.findByPk(id);
+    if (data) {
       const ref = await actor_movie.findOne({ where: { movie_id: id } });
-      if(ref){
+      if (ref) {
         await ref.destroy();
-      }    
+      }
       await data.destroy();
-      display.end_result(res,200,{"message": "deleted sucessfully"});
+      display.end_result(res, 200, { message: "deleted sucessfully" });
+      return;
+    } else {
+      display.end_result(res, 400, { message: "movie not found" });
       return;
     }
-    else{
-      display.end_result(res,400,{"message": "movie not found"});
-      return
-    }
-  }
-  catch(err){
-        display.end_result(res,err.status  || 500,{"message": err.message || "Some error occurred while deleting the movie."})
+  } catch (err) {
+    display.end_result(res, err.status || 500, {
+      message: err.message || "Some error occurred while deleting the movie.",
+    });
   }
 };
-
 
 // function EndResult(res,res_status,result)
 // {
@@ -199,4 +202,4 @@ exports.deleteByID = async(req,res) =>{
 //         res.json(result);
 //       }
 //     })
-// } 
+// }

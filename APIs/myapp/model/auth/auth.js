@@ -1,29 +1,30 @@
-
-module.exports = (sequelize,Sequelize) =>{
-    const Auth = sequelize.define("auth",{
+module.exports = (sequelize, Sequelize) => {
+  const Auth = sequelize.define(
+    "auth",
+    {
       auth_id: {
-          allowNull: false,
-          type: Sequelize.INTEGER,
-          autoIncrement: true,
-          primaryKey: true
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
       },
       name: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
-      email_id:{
+      email_id: {
         allowNull: true,
-        type:Sequelize.STRING,
-        unique: true
+        type: Sequelize.STRING,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-    }, 
+    },
     {
       timestamps: false,
     }
   );
-    return Auth;
-}
+  return Auth;
+};
