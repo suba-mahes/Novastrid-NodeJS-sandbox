@@ -97,7 +97,6 @@ exports.using_pdfkit = async (req, res) => {
 
     const paragraphs = textContent.split("\n");
 
-    console.log(paragraphs);
     paragraphs.forEach((paragraph) => {
       doc.text(paragraph);
     });

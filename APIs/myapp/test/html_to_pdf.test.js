@@ -58,17 +58,13 @@ describe("To convert html to PDF", function () {
       .send(html)
       .expect(200)
       .end(function (err, res) {
-        console.log(res);
         const header = res.headers["content-disposition"];
 
         const filenameRegex = /filename="([^"]+)"/;
         const matches = header.match(filenameRegex);
-        console.log(matches);
         const filename = matches[1];
-        console.log(header.split('"'));
         const output_path = path.join(upload_dir, filename);
-        console.log(output_path);
-        console.log(fs.existsSync(output_path));
+
         expect(fs.existsSync(output_path)).toBe(true);
         const pdf_content = fs.readFileSync(output_path);
 
@@ -134,7 +130,7 @@ describe("To convert html to PDF", function () {
         const filename = matches[1];
 
         const output_path = path.join(upload_dir, filename);
-        console.log(output_path);
+
         expect(fs.existsSync(output_path)).toBe(true);
         const pdf_content = fs.readFileSync(output_path);
 
