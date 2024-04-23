@@ -2,7 +2,7 @@ const fs = require("fs");
 const puppeteer = require("puppeteer");
 const html_pdf = require("html-pdf");
 const pdf_document = require("pdfkit");
-const html_to_pdf = require('html-pdfkit');
+const htmlToText = require("html-to-text");
 
 var display = require("../result_display.js");
 
@@ -91,7 +91,6 @@ exports.using_html_pdf = async (req, res) => {
 
 exports.using_pdfkit = async (req, res) => {
   try {
-    
     const html = req.body;
     const filename = `output_pdf_pdfkit_${Date.now()}.pdf`;
     const file_path = path.join(upload_dir, filename);
@@ -103,13 +102,21 @@ exports.using_pdfkit = async (req, res) => {
 
     //doc.text(html);
 
-    html_to_pdf(doc, html, {
-        width: 600, // Width of the PDF document
-        autoFirstPage: false // Do not automatically start a new page
+    const textContent = htmlToText.fromString(html, {
+      wordwrap: 130, // Adjust word wrap as needed
     });
+
+    // Split text content into paragraphs
+    const paragraphs = textContent.split("\n");
+
+    // Add each paragraph to the PDF
+    paragraphs.forEach((paragraph) => {
+      doc.text(paragraph);
+    });
+
     doc.end();
 
-    write_stream.on('finish', () => {
+    write_stream.on("finish", () => {
       res.set({
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment; filename=" + filename,
@@ -118,7 +125,7 @@ exports.using_pdfkit = async (req, res) => {
       //res.download(filePath);
     });
 
-    write_stream.on('error', (err) => {
+    write_stream.on("error", (err) => {
       display.end_error_result(res, err);
     });
 
