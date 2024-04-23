@@ -3,13 +3,23 @@ const db = require("../model/index.js");
 
 const { expect } = require("expect");
 const request = require("supertest");
+const path = require("path");
+const fs = require("fs");
+
 const app = require("../app.js");
+
+const pdf_parse = require("pdf-parse");
+
+const upload_dir = "/node_js/Novastrid-NodeJS-sandbox/APIs/myapp/pdf-download";
 
 before(function (done) {
   db.sequelize
     .sync()
     .then(() => {
       console.log("Sequelize models synced for testing\n");
+      console.log(
+        "\n\n let's start the whole test for converting html to pdf\n"
+      );
       done();
     })
     .catch(done);
@@ -24,343 +34,112 @@ afterEach(function (done) {
   console.log("---let's end the test---\n");
   done();
 });
-describe("register a user which is already registered", function () {
-  let user_token;
 
-  it("should register a user which is already registered on post ", function (done) {
-    const req_data = {
-      name: "insu",
-      email_id: "insub@gmail.com",
-      password: "passSDd123",
-    };
-
-    request(app)
-      .post(`/users/register`)
-      .send(req_data)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        if (res.body.message !== "Already registerd email_id") {
-          return done(new Error("registeration is not successfull"));
-        }
-        done();
-      });
-  });
-
-  it("welcome page (403-error)", function (done) {
-    request(app)
-      .get("/users/welcome")
-      .set("Authorization", `Bearer ${user_token}`)
-      .expect(403)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        const result = res.body;
-        if (result.message !== "Token is not valid") {
-          return done(new Error("error"));
-        }
-
-        done();
-      });
-  });
+after(function (done) {
+  console.log("\nlet's end the whole test for converting html to pdf\n");
+  done();
 });
 
-describe("register a user", function () {
-  let user_token;
+describe("To convert html to PDF", function () {
+  const html = `
+      <html>
+        <head><title>Test HTML to PDF</title></head>
+        <body>
+          <h1>Hello!</h1>
+          <p>This is a test HTML content to convert to PDF.</p>
+        </body>
+      </html>
+    `;
 
-  it("should register a user on post ", function (done) {
-    const req_data = {
-      name: "insu",
-      email_id: "inbaloveeesuba@gmail.com",
-      password: "passSDd123",
-    };
-
+  it("should generate html content to pdf using puppeteer on post ", function (done) {
     request(app)
-      .post(`/users/register`)
-      .send(req_data)
+      .post(`/pdf/generate-pdf-using-puppeteer`)
+      .send(html)
       .expect(200)
       .end(function (err, res) {
-        if (err) return done(res.body || err);
+        const header = res.headers["content-disposition"];
 
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
+        const filename = header.split("=")[1];
+        const output_path = path.join(upload_dir, filename);
 
-        if (res.body.message !== "registered successfully") {
-          return done(new Error("registeration is not successfull"));
-        } else {
-          user_token = res.body.token;
-        }
-        done();
-      });
-  });
+        expect(fs.existsSync(output_path)).toBe(true);
+        const pdf_content = fs.readFileSync(output_path);
 
-  it("welcome page", function (done) {
-    request(app)
-      .get("/users/welcome")
-      .set("Authorization", `Bearer ${user_token}`)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
+        pdf_parse(pdf_content).then((data) => {
+          const text_content = data.text;
 
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        const result = res.body;
-        if (
-          (!result.user_id ||
-            !result.first_name ||
-            !result.last_name ||
-            !result.email_id) &&
-          (!result.name || !result.message)
-        ) {
-          return done(new Error("error"));
-        }
-
-        done();
-      });
-  });
-});
-
-describe("login a user", function () {
-  let user_token;
-
-  it("should login a user on post ", function (done) {
-    const req_data = {
-      email_id: "insub@gmail.com",
-      password: "passSDd123",
-    };
-
-    request(app)
-      .post(`/users/login`)
-      .send(req_data)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        if (res.body.message !== "logged in successfully") {
-          return done(new Error("logging is not successfull"));
-        }
-        user_token = res.body.token;
-        done();
-      });
-  });
-
-  it("welcome page - login", function (done) {
-    request(app)
-      .get("/users/welcome")
-      .set("Authorization", `Bearer ${user_token}`)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        const result = res.body;
-        if (
-          (!result.user_id ||
-            !result.first_name ||
-            !result.last_name ||
-            !result.email_id) &&
-          (!result.name || !result.message)
-        ) {
-          return done(new Error("error"));
-        }
-
-        done();
-      });
-  });
-
-  it("welcome page - (401-error)", function (done) {
-    request(app)
-      .get("/users/welcome")
-      //.set('Authorization', `Bearer ${}`)
-      .expect(401)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        const result = res.body;
-        if (result.message !== "Token not provided") {
-          return done(new Error("error"));
-        }
-
-        done();
-      });
-  });
-});
-
-describe("user get all Tests", function () {
-  it("should return an array of users on GET ", function (done) {
-    request(app)
-      .get("/users/get-allusers")
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!Array.isArray(res.body)) {
-          return done(new Error("Response body is not an array"));
-        }
-        for (const result of res.body) {
-          if (
-            !result.user_id ||
-            !result.first_name ||
-            !result.last_name ||
-            !result.email_id ||
-            !result.address1 ||
-            !result.address2 ||
-            !result.city ||
-            !result.state ||
-            !result.country
-          ) {
-            return done(new Error("Response body is not an array"));
-          }
-        }
-        done();
-      });
-  });
-});
-
-describe("user get by id Tests", function () {
-  it("should return a user on GET ", function (done) {
-    const id = 1;
-    request(app)
-      .get(`/users/get-user-by-id/${id}`)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        if (res.body.user_id !== id) {
-          return done(
-            new Error("User ID in response does not match requested ID")
+          console.log(text_content);
+          expect(text_content).toContain("Hello!");
+          expect(text_content).toContain(
+            "This is a test HTML content to convert to PDF."
           );
-        }
+        });
 
-        const result = res.body;
-        if (
-          !result.user_id ||
-          !result.first_name ||
-          !result.last_name ||
-          !result.email_id ||
-          !result.address1 ||
-          !result.address2 ||
-          !result.city ||
-          !result.state ||
-          !result.country
-        ) {
-          return done(new Error("Response body is not an array"));
-        }
-        done();
-      });
-  });
-});
-
-describe("create a user", function () {
-  it("should create a user on post ", function (done) {
-    const req_data = {
-      first_name: "asa",
-      last_name: "zzz",
-      email_id: "sgf@gmail.com",
-      address1: "1659 ewsb",
-      address2: "tnhb s,villapuram",
-      city: "Madurai",
-      state: "Tamil nadu",
-      country: "India",
-    };
-    request(app)
-      .post(`/users/insert-user`)
-      .send(req_data)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
-
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
-
-        if (res.body.message !== "inserted successfully") {
-          return done(new Error("insertion is not successfull"));
-        }
+        fs.unlinkSync(output_path);
 
         done();
       });
-  });
-});
+  }).timeout(500000);
 
-describe("delete get by id Tests", function () {
-  it("should delete the user by id DELETE", function (done) {
-    const id = 22;
-    request(app)
-      .delete(`/users/delete-user-by-id/${id}`)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
+  // it("should generate html content to pdf using html-pdf on post ", function (done) {
+  //   request(app)
+  //     .post(`/pdf/generate-pdf-using-html-pdf`)
+  //     .set("Content-Type", "text/html")
+  //     .send(html)
+  //     .expect(200)
+  //     .end(function (err, res) {
+  //       const header = res.headers["content-disposition"];
 
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
+  //       const filename = header.split("=")[1];
+  //       const output_path = path.join(upload_dir, filename);
 
-        if (res.body.message !== "deleted successfully") {
-          return done(new Error("deletion is not successfull"));
-        }
+  //       expect(fs.existsSync(output_path)).toBe(true);
+  //       const pdf_content = fs.readFileSync(output_path);
 
-        done();
-      });
-  });
-});
+  //       pdf_parse(pdf_content).then((data) => {
+  //         const text_content = data.text;
 
-describe("update a user", function () {
-  it("should update a user on put ", function (done) {
-    const id = 1;
-    const req_data = {
-      first_name: "hai",
-      last_name: "zzz",
-      email_id: "aa@gmail.com",
-      address1: "1659 ewsb",
-      address2: "tnhb colon,villapuram",
-      city: "Madurai",
-      state: "f nadu",
-      country: "India",
-    };
-    request(app)
-      .put(`/users/update-user/${id}`)
-      .send(req_data)
-      .expect(200)
-      .end(function (err, res) {
-        if (err) return done(res.body || err);
+  //         console.log(text_content);
+  //         expect(text_content).toContain("Hello!");
+  //         expect(text_content).toContain(
+  //           "This is a test HTML content to convert to PDF."
+  //         );
+  //       });
 
-        if (!res.body || typeof res.body !== "object") {
-          return done(new Error("Response body is not an object"));
-        }
+  //       fs.unlinkSync(output_path);
 
-        if (res.body.message !== "updated successfully") {
-          return done(new Error("updation is not successfull"));
-        }
+  //       done();
+  //     });
+  // }).timeout(500000);
 
-        done();
-      });
-  });
+  // it("should generate html content to pdf using pdfkit on post ", function (done) {
+  //   request(app)
+  //     .post(`/pdf/generate-pdf-using-pdfkit`)
+  //     .set("Content-Type", "text/html")
+  //     .send(html)
+  //     .expect(200)
+  //     .end(function (err, res) {
+  //       const header = res.headers["content-disposition"];
+
+  //       const filename = header.split("=")[1];
+  //       const output_path = path.join(upload_dir, filename);
+  //       console.log(output_path);
+  //       //expect(fs.existsSync(output_path)).toBe(true);
+  //       const pdf_content = fs.readFileSync(output_path);
+
+  //       pdf_parse(pdf_content).then((data) => {
+  //         const text_content = data.text;
+
+  //         console.log(text_content);
+  //         // expect(text_content).toContain("Hello!");
+  //         // expect(text_content).toContain(
+  //         //   "This is a test HTML content to convert to PDF."
+  //         // );
+  //       });
+
+  //       fs.unlinkSync(output_path);
+
+  //       done();
+  //     });
+  // }).timeout(500000);
 });

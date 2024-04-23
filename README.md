@@ -17,7 +17,7 @@ npm install --save-dev mocha chai supertest
 
 npm install node-cron axios nodemailer ejs
 
-npm install puppeteer html-pdf pdfkit
+npm install puppeteer html-pdf pdfkit cheerio pdf-parse
 
 npm install --save-dev sequelize-cli
 

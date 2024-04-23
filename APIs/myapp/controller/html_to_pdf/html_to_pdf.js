@@ -40,7 +40,6 @@ exports.using_puppeteer = async (req, res) => {
 exports.using_html_pdf = async (req, res) => {
   try {
     const html = req.body;
-
     html_pdf.create(html).toBuffer((err, buffer) => {
       if (err) {
         display.end_error_result(res, error);
@@ -81,10 +80,10 @@ exports.using_pdfkit = async (req, res) => {
 
     const paragraphs = textContent.split("\n");
 
+    console.log(paragraphs);
     paragraphs.forEach((paragraph) => {
       doc.text(paragraph);
     });
-    console.log(paragraphs);
     doc.end();
 
     write_stream.on("finish", () => {

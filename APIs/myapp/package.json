@@ -33,6 +33,7 @@
     "mysql2": "^3.9.2",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",
+    "pdf-parse": "^1.1.1",
     "pdfkit": "^0.15.0",
     "pug": "2.0.0-beta11",
     "puppeteer": "^22.6.5",
