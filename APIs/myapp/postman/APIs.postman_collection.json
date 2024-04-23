@@ -7,210 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "user",
-			"item": [
-				{
-					"name": "user",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{url}}{{user}}/get-allusers"
-					},
-					"response": []
-				},
-				{
-					"name": "user-id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{url}}{{user}}/get-user-by-id/1"
-					},
-					"response": []
-				},
-				{
-					"name": "user-details",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n        \"first_name\": \"asa\",\r\n        \"last_name\": \"zzz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{url}}{{user}}/insert-user"
-					},
-					"response": []
-				},
-				{
-					"name": "user-details-update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n        \"first_name\": \"insu\",\r\n        \"last_name\": \"zzz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{url}}{{user}}/update-user/1"
-					},
-					"response": []
-				},
-				{
-					"name": "delete - user by id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "{{url}}{{user}}/delete-user-by-id/2"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "user details",
-			"item": [
-				{
-					"name": "user",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{url}}{{user_detail}}/get-allusers"
-					},
-					"response": []
-				},
-				{
-					"name": "user-id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{url}}{{user_detail}}/get-user-by-id/12"
-					},
-					"response": []
-				},
-				{
-					"name": "user-details",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"insu\",\r\n    \"last_name\": \"zzz\",\r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"address\": {\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{url}}{{user_detail}}/insert-user"
-					},
-					"response": []
-				},
-				{
-					"name": "user-details-update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"is\",\r\n    \"last_name\": \"insu\",\r\n    \"address\": {\r\n        \"address1\": \" sy\",\r\n        \"address2\": \" ,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{url}}{{user_detail}}/update-user/12"
-					},
-					"response": []
-				},
-				{
-					"name": "delete - user by id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "{{url}}{{user_detail}}/delete-user-by-id/3"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "user details-ONE_TO_MANY",
-			"item": [
-				{
-					"name": "user",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{url}}{{user_detail_table}}/get-allusers"
-					},
-					"response": []
-				},
-				{
-					"name": "user-id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{url}}{{user_detail_table}}/get-user-by-id/2"
-					},
-					"response": []
-				},
-				{
-					"name": "user-details",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"insu\",\r\n    \"last_name\": \"zzz\", \r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"user_address_tables\": [\r\n        {\r\n            \"address_name\": \"office_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colon,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        },\r\n        {\r\n            \"address_name\": \"home_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colony,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{url}}{{user_detail_table}}/insert-user"
-					},
-					"response": []
-				},
-				{
-					"name": "user-details-update",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"suba\",\r\n    \"last_name\": \"zzz\",\r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"user_address_tables\": [\r\n        {\r\n            \"user_address_id\":5,\r\n            \"address_name\": \"office_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb www,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        },\r\n        {\r\n            \"user_address_id\":6,\r\n            \"address_name\": \"home_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colony,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{url}}{{user_detail_table}}/update-user/2"
-					},
-					"response": []
-				},
-				{
-					"name": "delete - user by id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "{{url}}{{user_detail_table}}/delete-user-by-id/1"
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "user details-MANY_TO_MANY",
 			"item": [
 				{
@@ -452,6 +248,210 @@
 							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "user details-ONE_TO_MANY",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user_detail_table}}/get-allusers"
+					},
+					"response": []
+				},
+				{
+					"name": "user-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user_detail_table}}/get-user-by-id/2"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"insu\",\r\n    \"last_name\": \"zzz\", \r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"user_address_tables\": [\r\n        {\r\n            \"address_name\": \"office_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colon,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        },\r\n        {\r\n            \"address_name\": \"home_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colony,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user_detail_table}}/insert-user"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details-update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"suba\",\r\n    \"last_name\": \"zzz\",\r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"user_address_tables\": [\r\n        {\r\n            \"user_address_id\":5,\r\n            \"address_name\": \"office_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb www,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        },\r\n        {\r\n            \"user_address_id\":6,\r\n            \"address_name\": \"home_address\",\r\n            \"address1\": \"1659 ewsb\",\r\n            \"address2\": \"tnhb colony,villapuram\",\r\n            \"city\": \"Madurai\",\r\n            \"state\": \"Tamil nadu\",\r\n            \"country\": \"India\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user_detail_table}}/update-user/2"
+					},
+					"response": []
+				},
+				{
+					"name": "delete - user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}{{user_detail_table}}/delete-user-by-id/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user details",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user_detail}}/get-allusers"
+					},
+					"response": []
+				},
+				{
+					"name": "user-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user_detail}}/get-user-by-id/12"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"insu\",\r\n    \"last_name\": \"zzz\",\r\n    \"email_id\": \"qqq@gmail.com\",\r\n    \"address\": {\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user_detail}}/insert-user"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details-update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"is\",\r\n    \"last_name\": \"insu\",\r\n    \"address\": {\r\n        \"address1\": \" sy\",\r\n        \"address2\": \" ,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user_detail}}/update-user/12"
+					},
+					"response": []
+				},
+				{
+					"name": "delete - user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}{{user_detail}}/delete-user-by-id/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user}}/get-allusers"
+					},
+					"response": []
+				},
+				{
+					"name": "user-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}{{user}}/get-user-by-id/1"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"first_name\": \"insu\",\r\n        \"last_name\": \"zzz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user}}/insert-user"
+					},
+					"response": []
+				},
+				{
+					"name": "user-details-update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"first_name\": \"insu\",\r\n        \"last_name\": \"zzz\",\r\n        \"email_id\": \"qqq@gmail.com\",\r\n        \"address1\": \"1659 ewsb\",\r\n        \"address2\": \"tnhb colon,villapuram\",\r\n        \"city\": \"Madurai\",\r\n        \"state\": \"Tamil nadu\",\r\n        \"country\": \"India\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{user}}/update-user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "delete - user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}{{user}}/delete-user-by-id/2"
+					},
+					"response": []
 				}
 			]
 		},
@@ -852,6 +852,71 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "html-pdf",
+			"item": [
+				{
+					"name": "usingPuppeteer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Sample HTML Page</title>\r\n</head>\r\n<body>\r\n    <h1>Hello, World!</h1>\r\n    <p>This is a sample HTML page.</p>\r\n    <p>You can customize it as you like.</p>\r\n</body>\r\n</html>\r\n",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": "{{url}}{{pdf}}/generate-pdf-using-puppeteer"
+					},
+					"response": []
+				},
+				{
+					"name": "usingHtml_pdf",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Sample HTML Page</title>\r\n</head>\r\n\r\n<body>\r\n    <h1>Hello, World!</h1>\r\n    <p>This is a sample HTML page.</p>\r\n    <p>You can customize it as you like.</p>\r\n</body>\r\n\r\n</html>",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": "{{url}}{{pdf}}/generate-pdf-using-html-pdf"
+					},
+					"response": []
+				},
+				{
+					"name": "using pdf kit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Sample HTML Page</title>\r\n</head>\r\n<body>\r\n    <h1>Hello, World!</h1>\r\n    <p>This is a sample HTML page.</p>\r\n    <p>You can customize it as you like.</p>\r\n</body>\r\n</html>\r\n",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": "{{url}}{{pdf}}/generate-pdf-using-pdfkit"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "pdf",
+			"value": "pdf"
 		}
 	]
 }
