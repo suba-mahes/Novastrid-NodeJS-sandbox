@@ -54,12 +54,52 @@ describe("To convert html to PDF", function () {
   it("should generate html content to pdf using puppeteer on post ", function (done) {
     request(app)
       .post(`/pdf/generate-pdf-using-puppeteer`)
+      .set("Content-Type", "text/html")
+      .send(html)
+      .expect(200)
+      .end(function (err, res) {
+        console.log(res);
+        const header = res.headers["content-disposition"];
+
+        const filenameRegex = /filename="([^"]+)"/;
+        const matches = header.match(filenameRegex);
+        console.log(matches);
+        const filename = matches[1];
+        console.log(header.split('"'));
+        const output_path = path.join(upload_dir, filename);
+        console.log(output_path);
+        console.log(fs.existsSync(output_path));
+        expect(fs.existsSync(output_path)).toBe(true);
+        const pdf_content = fs.readFileSync(output_path);
+
+        pdf_parse(pdf_content).then((data) => {
+          const text_content = data.text;
+
+          console.log(text_content);
+          expect(text_content).toContain("Hello!");
+          expect(text_content).toContain(
+            "This is a test HTML content to convert to PDF."
+          );
+        });
+
+        done();
+      });
+  }).timeout(500000);
+
+  it("should generate html content to pdf using html-pdf on post ", function (done) {
+    request(app)
+      .post(`/pdf/generate-pdf-using-html-pdf`)
+      .set("Content-Type", "text/html")
       .send(html)
       .expect(200)
       .end(function (err, res) {
         const header = res.headers["content-disposition"];
 
-        const filename = header.split("=")[1];
+        const filenameRegex = /filename="([^"]+)"/;
+        const matches = header.match(filenameRegex);
+
+        const filename = matches[1];
+
         const output_path = path.join(upload_dir, filename);
 
         expect(fs.existsSync(output_path)).toBe(true);
@@ -75,71 +115,40 @@ describe("To convert html to PDF", function () {
           );
         });
 
-        fs.unlinkSync(output_path);
-
         done();
       });
   }).timeout(500000);
 
-  // it("should generate html content to pdf using html-pdf on post ", function (done) {
-  //   request(app)
-  //     .post(`/pdf/generate-pdf-using-html-pdf`)
-  //     .set("Content-Type", "text/html")
-  //     .send(html)
-  //     .expect(200)
-  //     .end(function (err, res) {
-  //       const header = res.headers["content-disposition"];
+  it("should generate html content to pdf using pdfkit on post ", function (done) {
+    request(app)
+      .post(`/pdf/generate-pdf-using-pdfkit`)
+      .set("Content-Type", "text/html")
+      .send(html)
+      .expect(200)
+      .end(function (err, res) {
+        const header = res.headers["content-disposition"];
 
-  //       const filename = header.split("=")[1];
-  //       const output_path = path.join(upload_dir, filename);
+        const filenameRegex = /filename="([^"]+)"/;
+        const matches = header.match(filenameRegex);
 
-  //       expect(fs.existsSync(output_path)).toBe(true);
-  //       const pdf_content = fs.readFileSync(output_path);
+        const filename = matches[1];
 
-  //       pdf_parse(pdf_content).then((data) => {
-  //         const text_content = data.text;
+        const output_path = path.join(upload_dir, filename);
+        console.log(output_path);
+        expect(fs.existsSync(output_path)).toBe(true);
+        const pdf_content = fs.readFileSync(output_path);
 
-  //         console.log(text_content);
-  //         expect(text_content).toContain("Hello!");
-  //         expect(text_content).toContain(
-  //           "This is a test HTML content to convert to PDF."
-  //         );
-  //       });
+        pdf_parse(pdf_content).then((data) => {
+          const text_content = data.text;
 
-  //       fs.unlinkSync(output_path);
+          console.log(text_content);
+          expect(text_content).toContain("Hello!");
+          expect(text_content).toContain(
+            "This is a test HTML content to convert to PDF."
+          );
+        });
 
-  //       done();
-  //     });
-  // }).timeout(500000);
-
-  // it("should generate html content to pdf using pdfkit on post ", function (done) {
-  //   request(app)
-  //     .post(`/pdf/generate-pdf-using-pdfkit`)
-  //     .set("Content-Type", "text/html")
-  //     .send(html)
-  //     .expect(200)
-  //     .end(function (err, res) {
-  //       const header = res.headers["content-disposition"];
-
-  //       const filename = header.split("=")[1];
-  //       const output_path = path.join(upload_dir, filename);
-  //       console.log(output_path);
-  //       //expect(fs.existsSync(output_path)).toBe(true);
-  //       const pdf_content = fs.readFileSync(output_path);
-
-  //       pdf_parse(pdf_content).then((data) => {
-  //         const text_content = data.text;
-
-  //         console.log(text_content);
-  //         // expect(text_content).toContain("Hello!");
-  //         // expect(text_content).toContain(
-  //         //   "This is a test HTML content to convert to PDF."
-  //         // );
-  //       });
-
-  //       fs.unlinkSync(output_path);
-
-  //       done();
-  //     });
-  // }).timeout(500000);
+        done();
+      });
+  }).timeout(500000);
 });

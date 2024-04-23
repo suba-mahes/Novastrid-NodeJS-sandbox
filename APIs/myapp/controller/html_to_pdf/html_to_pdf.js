@@ -22,12 +22,20 @@ exports.using_puppeteer = async (req, res) => {
     const filename = `output_pdf_puppeteer_${Date.now()}.pdf`;
     const file_path = path.join(upload_dir, filename);
     try {
-      fs.writeFileSync(file_path, pdf_buffer);
-      res.set({
-        "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=" + filename,
+      fs.writeFile(file_path, pdf_buffer, (err) => {
+        if (err) {
+          display.end_result(res, err.status || 500, {
+            message: err.message || "Some error occurred.",
+          });
+        } else {
+          res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "attachment; filename=" + filename,
+          });
+          // res.send(pdf_buffer);
+          res.download(file_path);
+        }
       });
-      res.send(pdf_buffer);
     } catch (error) {
       display.end_error_result(res, error);
     }
@@ -47,12 +55,21 @@ exports.using_html_pdf = async (req, res) => {
         const filename = `output_pdf_html-pdf_${Date.now()}.pdf`;
         const file_path = path.join(upload_dir, filename);
         try {
-          fs.writeFileSync(file_path, buffer);
-          res.set({
-            "Content-Type": "application/pdf",
-            "Content-Disposition": "attachment; filename=" + filename,
+          fs.writeFile(file_path, buffer, (err) => {
+            if (err) {
+              display.end_result(res, err.status || 500, {
+                message: err.message || "Some error occurred.",
+              });
+            } else {
+              res.set({
+                "Content-Type": "application/pdf",
+                "Content-Disposition": "attachment; filename=" + filename,
+              });
+              //res.send(buffer);
+
+              res.download(file_path);
+            }
           });
-          res.send(buffer);
         } catch (error) {
           display.end_error_result(res, error);
         }
@@ -91,7 +108,6 @@ exports.using_pdfkit = async (req, res) => {
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment; filename=" + filename,
       });
-      //res.send();
       res.download(file_path);
     });
 
