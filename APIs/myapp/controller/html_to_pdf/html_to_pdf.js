@@ -2,7 +2,7 @@ const fs = require("fs");
 const puppeteer = require("puppeteer");
 const html_pdf = require("html-pdf");
 const pdf_document = require("pdfkit");
-const htmlToText = require("html-to-text");
+const cheerio = require("cheerio");
 
 var display = require("../result_display.js");
 
@@ -28,17 +28,6 @@ exports.using_puppeteer = async (req, res) => {
         "Content-Disposition": "attachment; filename=" + filename,
       });
       res.send(pdf_buffer);
-      //   (err) => {
-      //   // Provide a callback function here
-      //   if (err) {
-      //     display.end_error_result(res, error);
-      //   } else {
-      //     display.end_result(res, 200, {
-      //       message: "File is uploaded successfully",
-      //     });
-      //   }
-      // });
-      //    res.sendFile(file_path);
     } catch (error) {
       display.end_error_result(res, error);
     }
@@ -65,20 +54,6 @@ exports.using_html_pdf = async (req, res) => {
             "Content-Disposition": "attachment; filename=" + filename,
           });
           res.send(buffer);
-
-          // , (err) => {
-          //   // Provide a callback function here
-          //   if (err) {
-          //     display.end_error_result(res, error);
-          //
-          //     });
-          //   } else {
-          //     display.end_result(res, 200, {
-          //       message: "File is uploaded successfully",
-          //     });
-          //   }
-          // });
-          //    res.sendFile(file_path);
         } catch (error) {
           display.end_error_result(res, error);
         }
@@ -100,20 +75,16 @@ exports.using_pdfkit = async (req, res) => {
     const write_stream = fs.createWriteStream(file_path);
     doc.pipe(write_stream);
 
-    //doc.text(html);
+    const $ = cheerio.load(html);
 
-    const textContent = htmlToText.fromString(html, {
-      wordwrap: 130, // Adjust word wrap as needed
-    });
+    const textContent = $("body").text();
 
-    // Split text content into paragraphs
     const paragraphs = textContent.split("\n");
 
-    // Add each paragraph to the PDF
     paragraphs.forEach((paragraph) => {
       doc.text(paragraph);
     });
-
+    console.log(paragraphs);
     doc.end();
 
     write_stream.on("finish", () => {
@@ -121,34 +92,13 @@ exports.using_pdfkit = async (req, res) => {
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment; filename=" + filename,
       });
-      res.send(file_path);
-      //res.download(filePath);
+      //res.send();
+      res.download(file_path);
     });
 
     write_stream.on("error", (err) => {
       display.end_error_result(res, err);
     });
-
-    // doc.pipe(
-    //   new (require("stream").Writable)({
-    //     write(chunk, encoding, callback) {
-    //       buffers.push(chunk);
-    //       callback();
-    //     },
-    //     final(callback) {
-    //       res.set({
-    //         "Content-Type": "application/pdf",
-    //         "Content-Disposition": `attachment; filename=${filename}`,
-    //       });
-    //       res.send(Buffer.concat(buffers));
-    //       fs.writeFileSync(file_path, Buffer.concat(buffers));
-    //       callback();
-    //     },
-    //   })
-    // );
-
-    // doc.text(html);
-    // doc.end();
   } catch (err) {
     display.end_error_result(res, err);
   }
