@@ -31,6 +31,7 @@ var app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(body_parser.text({ type: "text/html" }));
