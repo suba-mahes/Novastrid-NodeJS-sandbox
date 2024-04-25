@@ -2,9 +2,9 @@ const fs = require("fs");
 const puppeteer = require("puppeteer");
 const html_pdf = require("html-pdf");
 const pdf_document = require("pdfkit");
-const cheerio = require("cheerio");
 
 var display = require("../result_display.js");
+var { render_html_to_pdf } = require("../../middleware/html_to_pdf/html_to_pdf.js");
 
 const path = require("path");
 
@@ -16,7 +16,7 @@ exports.using_puppeteer = async (req, res) => {
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.setContent(html);
+    await page.setContent(html, { waitUntil: "networkidle0" });
     const pdf_buffer = await page.pdf({ format: "A4" });
 
     const filename = `output_pdf_puppeteer_${Date.now()}.pdf`;
@@ -91,15 +91,8 @@ exports.using_pdfkit = async (req, res) => {
     const write_stream = fs.createWriteStream(file_path);
     doc.pipe(write_stream);
 
-    const $ = cheerio.load(html);
+    await render_html_to_pdf(doc, html);
 
-    const textContent = $("body").text();
-
-    const paragraphs = textContent.split("\n");
-
-    paragraphs.forEach((paragraph) => {
-      doc.text(paragraph);
-    });
     doc.end();
 
     write_stream.on("finish", () => {
