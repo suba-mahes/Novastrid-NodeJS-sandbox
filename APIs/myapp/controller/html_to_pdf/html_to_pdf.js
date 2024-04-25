@@ -4,7 +4,9 @@ const html_pdf = require("html-pdf");
 const pdf_document = require("pdfkit");
 
 var display = require("../result_display.js");
-var { render_html_to_pdf } = require("../../middleware/html_to_pdf/html_to_pdf.js");
+var {
+  render_html_to_pdf,
+} = require("../../middleware/html_to_pdf/html_to_pdf.js");
 
 const path = require("path");
 
@@ -14,31 +16,21 @@ exports.using_puppeteer = async (req, res) => {
   try {
     const html = req.body;
 
+    const filename = `output_pdf_puppeteer_${Date.now()}.pdf`;
+    const file_path = path.join(upload_dir, filename);
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle0" });
-    const pdf_buffer = await page.pdf({ format: "A4" });
+    const pdf_buffer = await page.pdf({ path: file_path, format: "A4" });
 
-    const filename = `output_pdf_puppeteer_${Date.now()}.pdf`;
-    const file_path = path.join(upload_dir, filename);
-    try {
-      fs.writeFile(file_path, pdf_buffer, (err) => {
-        if (err) {
-          display.end_result(res, err.status || 500, {
-            message: err.message || "Some error occurred.",
-          });
-        } else {
-          res.set({
-            "Content-Type": "application/pdf",
-            "Content-Disposition": "attachment; filename=" + filename,
-          });
-          // res.send(pdf_buffer);
-          res.download(file_path);
-        }
-      });
-    } catch (error) {
-      display.end_error_result(res, error);
-    }
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=" + filename,
+    });
+    // res.send(pdf_buffer);
+    res.download(file_path);
+
     await browser.close();
   } catch (err) {
     display.end_error_result(res, err);

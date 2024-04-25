@@ -26,7 +26,6 @@ var excelRouter = require("./routes/excel_upload/excel_upload");
 var xlsxRouter = require("./routes/excel_upload/excel_upload_using_xlsx");
 
 var pdfRouter = require("./routes/html_to_pdf/html_to_pdf");
-var pdfWithImageRouter = require("./routes/html_to_pdf/html_with_image_to_pdf");
 
 var app = express();
 
@@ -54,7 +53,6 @@ app.use("/excel", excelRouter);
 app.use("/xlsx", xlsxRouter);
 
 app.use("/pdf", pdfRouter);
-app.use("/pdf-with-image", pdfWithImageRouter);
 
 const db = require("./model");
 db.sequelize.sync();
